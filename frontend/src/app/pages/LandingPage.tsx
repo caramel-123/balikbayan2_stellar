@@ -7,15 +7,26 @@ export function LandingPage() {
   const { connectWallet, setUserRole } = useApp();
   const [showConnectModal, setShowConnectModal] = useState(false);
   const [showRoleModal, setShowRoleModal] = useState(false);
+  const [isConnecting, setIsConnecting] = useState(false);
+  const [connectError, setConnectError] = useState<string | null>(null);
 
   const handleConnect = () => {
+    setConnectError(null);
     setShowConnectModal(true);
   };
 
-  const confirmConnect = () => {
-    connectWallet();
-    setShowConnectModal(false);
-    setShowRoleModal(true);
+  const confirmConnect = async () => {
+    setIsConnecting(true);
+    setConnectError(null);
+    try {
+      await connectWallet();
+      setShowConnectModal(false);
+      setShowRoleModal(true);
+    } catch (err) {
+      setConnectError(err instanceof Error ? err.message : 'Failed to connect wallet');
+    } finally {
+      setIsConnecting(false);
+    }
   };
 
   return (
@@ -257,9 +268,17 @@ export function LandingPage() {
               </p>
             </div>
 
+            {connectError && (
+              <div className="mb-3 p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700">
+                {connectError.includes('not found') || connectError.includes('install')
+                  ? <>Freighter not detected. <a href="https://www.freighter.app" target="_blank" rel="noreferrer" className="underline font-semibold">Install Freighter</a> then try again.</>
+                  : connectError}
+              </div>
+            )}
+
             <div className="space-y-3">
-              <Button className="w-full" onClick={confirmConnect}>
-                Connect
+              <Button className="w-full" loading={isConnecting} onClick={confirmConnect}>
+                {isConnecting ? 'Connecting…' : 'Connect'}
               </Button>
               <Button variant="ghost" className="w-full" onClick={() => setShowConnectModal(false)}>
                 Cancel
