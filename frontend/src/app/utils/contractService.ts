@@ -4,12 +4,31 @@ import {
   BASE_FEE,
   rpc as SorobanRpc,
   xdr,
-  Address,
+  StrKey,
   nativeToScVal,
   scValToNative,
 } from '@stellar/stellar-sdk';
 import { signTransaction } from '@stellar/freighter-api';
 import { CONTRACT_ID, NETWORK_PASSPHRASE, RPC_URL, TOKEN_CONTRACT_ID } from './sorobanConfig';
+
+// Build ScVal for any Stellar address (G... account or C... contract)
+function addressToScVal(address: string): xdr.ScVal {
+  if (StrKey.isValidEd25519PublicKey(address)) {
+    const bytes = StrKey.decodeEd25519PublicKey(address);
+    return xdr.ScVal.scvAddress(
+      xdr.ScAddress.scAddressTypeAccount(
+        xdr.PublicKey.publicKeyTypeEd25519(bytes)
+      )
+    );
+  }
+  if (StrKey.isValidContract(address)) {
+    const bytes = StrKey.decodeContract(address);
+    return xdr.ScVal.scvAddress(
+      xdr.ScAddress.scAddressTypeContract(bytes as unknown as xdr.Hash)
+    );
+  }
+  throw new Error(`Invalid Stellar address: "${address}". Must start with G (account) or C (contract).`);
+}
 
 const server = new SorobanRpc.Server(RPC_URL);
 
@@ -168,9 +187,9 @@ export async function createEscrow(
   const deadline = BigInt(Math.floor(new Date(deadlineDate).getTime() / 1000));
 
   const args = [
-    Address.fromString(walletAddress).toScVal(),
-    Address.fromString(familyAddress).toScVal(),
-    Address.fromString(TOKEN_CONTRACT_ID).toScVal(),
+    addressToScVal(walletAddress),
+    addressToScVal(familyAddress),
+    addressToScVal(TOKEN_CONTRACT_ID),
     nativeToScVal(amount, { type: 'i128' }),
     billTypeToScVal(billType),
     nativeToScVal(deadline, { type: 'u64' }),
@@ -206,7 +225,7 @@ export async function raiseDispute(
 ): Promise<boolean> {
   const args = [
     nativeToScVal(escrowId, { type: 'u32' }),
-    Address.fromString(walletAddress).toScVal(),
+    addressToScVal(walletAddress),
   ];
   const result = await buildAndSubmit(walletAddress, 'raise_dispute', args);
   return result ? Boolean(scValToNative(result)) : false;
@@ -275,7 +294,7 @@ export interface ChainBox {
 
 export async function getBoxCount(walletAddress: string): Promise<number> {
   try {
-    const args = [Address.fromString(walletAddress).toScVal()];
+    const args = [addressToScVal(walletAddress)];
     const result = await simulateOnly(walletAddress, 'get_box_count', args);
     return result ? Number(scValToNative(result)) : 0;
   } catch {
@@ -289,7 +308,7 @@ export async function getBox(
 ): Promise<ChainBox | null> {
   try {
     const args = [
-      Address.fromString(walletAddress).toScVal(),
+      addressToScVal(walletAddress),
       nativeToScVal(boxNumber, { type: 'u32' }),
     ];
     const result = await simulateOnly(walletAddress, 'get_box', args);
@@ -312,7 +331,7 @@ export async function getBox(
 
 export async function getTier(walletAddress: string): Promise<string> {
   try {
-    const args = [Address.fromString(walletAddress).toScVal()];
+    const args = [addressToScVal(walletAddress)];
     const result = await simulateOnly(walletAddress, 'get_tier', args);
     return result ? String(scValToNative(result)) : 'Common';
   } catch {
