@@ -1,0 +1,315 @@
+import {
+  Contract,
+  TransactionBuilder,
+  BASE_FEE,
+  rpc as SorobanRpc,
+  xdr,
+  Address,
+  nativeToScVal,
+  scValToNative,
+} from '@stellar/stellar-sdk';
+import { signTransaction } from '@stellar/freighter-api';
+import { CONTRACT_ID, NETWORK_PASSPHRASE, RPC_URL, TOKEN_CONTRACT_ID } from './sorobanConfig';
+
+const server = new SorobanRpc.Server(RPC_URL);
+
+// PHP to USDC conversion (7 decimal places on Stellar)
+const PHP_TO_USD = 56;
+const TOKEN_DECIMALS = 10_000_000n;
+
+export function phpToTokenUnits(php: number): bigint {
+  return BigInt(Math.round((php / PHP_TO_USD) * Number(TOKEN_DECIMALS)));
+}
+
+export function tokenUnitsToPHP(units: bigint): number {
+  return (Number(units) / Number(TOKEN_DECIMALS)) * PHP_TO_USD;
+}
+
+const BILL_TYPE_VARIANTS: Record<string, string> = {
+  tuition: 'Tuition',
+  electricity: 'Electricity',
+  water: 'Water',
+  internet: 'Internet',
+  medical: 'Medical',
+  rent: 'Rent',
+  grocery: 'Grocery',
+  medicine: 'Medicine',
+  savings: 'Savings',
+  custom: 'Custom',
+};
+
+const BILL_TYPE_FROM_CHAIN: Record<string, string> = Object.fromEntries(
+  Object.entries(BILL_TYPE_VARIANTS).map(([k, v]) => [v, k])
+);
+
+function billTypeToScVal(billType: string): xdr.ScVal {
+  const variant = BILL_TYPE_VARIANTS[billType] ?? 'Custom';
+  return xdr.ScVal.scvVec([xdr.ScVal.scvSymbol(variant)]);
+}
+
+function scValToBillType(val: xdr.ScVal): string {
+  try {
+    const arr = val.vec();
+    if (arr && arr.length > 0) {
+      const sym = arr[0].sym()?.toString();
+      return BILL_TYPE_FROM_CHAIN[sym ?? ''] ?? 'custom';
+    }
+  } catch {
+    // fall through
+  }
+  return 'custom';
+}
+
+async function buildAndSubmit(
+  walletAddress: string,
+  method: string,
+  args: xdr.ScVal[]
+): Promise<xdr.ScVal | null> {
+  const contract = new Contract(CONTRACT_ID);
+  const account = await server.getAccount(walletAddress);
+
+  const tx = new TransactionBuilder(account, {
+    fee: BASE_FEE,
+    networkPassphrase: NETWORK_PASSPHRASE,
+  })
+    .addOperation(contract.call(method, ...args))
+    .setTimeout(30)
+    .build();
+
+  const preparedTx = await server.prepareTransaction(tx);
+
+  const signResult = await signTransaction(preparedTx.toXDR(), {
+    networkPassphrase: NETWORK_PASSPHRASE,
+  });
+
+  if ('error' in signResult) {
+    throw new Error((signResult.error as Error).message ?? 'Signing rejected');
+  }
+
+  const signedTx = TransactionBuilder.fromXDR(
+    signResult.signedTxXdr,
+    NETWORK_PASSPHRASE
+  );
+
+  const sendResult = await server.sendTransaction(signedTx);
+
+  if (sendResult.status === 'ERROR') {
+    throw new Error('Transaction submission failed');
+  }
+
+  // Poll until confirmed
+  let getResult = await server.getTransaction(sendResult.hash);
+  let attempts = 0;
+  while (getResult.status === SorobanRpc.Api.GetTransactionStatus.NOT_FOUND && attempts < 30) {
+    await new Promise(r => setTimeout(r, 1000));
+    getResult = await server.getTransaction(sendResult.hash);
+    attempts++;
+  }
+
+  if (getResult.status === SorobanRpc.Api.GetTransactionStatus.SUCCESS) {
+    const success = getResult as SorobanRpc.Api.GetSuccessfulTransactionResponse;
+    return success.returnValue ?? null;
+  }
+
+  throw new Error(`Transaction failed: ${getResult.status}`);
+}
+
+async function simulateOnly(
+  walletAddress: string,
+  method: string,
+  args: xdr.ScVal[]
+): Promise<xdr.ScVal | null> {
+  const contract = new Contract(CONTRACT_ID);
+  const account = await server.getAccount(walletAddress);
+
+  const tx = new TransactionBuilder(account, {
+    fee: BASE_FEE,
+    networkPassphrase: NETWORK_PASSPHRASE,
+  })
+    .addOperation(contract.call(method, ...args))
+    .setTimeout(30)
+    .build();
+
+  const simResult = await server.simulateTransaction(tx);
+
+  if (SorobanRpc.Api.isSimulationError(simResult)) {
+    throw new Error(`Simulation error: ${simResult.error}`);
+  }
+
+  const success = simResult as SorobanRpc.Api.SimulateTransactionSuccessResponse;
+  return success.result?.retval ?? null;
+}
+
+// ── Public API ────────────────────────────────────────────────────────────────
+
+export async function createEscrow(
+  walletAddress: string,
+  familyAddress: string,
+  amountPhp: number,
+  billType: string,
+  deadlineDate: string
+): Promise<number> {
+  const amount = phpToTokenUnits(amountPhp);
+  const deadline = BigInt(Math.floor(new Date(deadlineDate).getTime() / 1000));
+
+  const args = [
+    new Address(walletAddress).toScVal(),
+    new Address(familyAddress).toScVal(),
+    new Address(TOKEN_CONTRACT_ID).toScVal(),
+    nativeToScVal(amount, { type: 'i128' }),
+    billTypeToScVal(billType),
+    nativeToScVal(deadline, { type: 'u64' }),
+  ];
+
+  const result = await buildAndSubmit(walletAddress, 'create_escrow', args);
+  if (!result) throw new Error('No return value from create_escrow');
+  return Number(scValToNative(result));
+}
+
+export async function confirmPayment(
+  walletAddress: string,
+  escrowId: number
+): Promise<boolean> {
+  const args = [nativeToScVal(escrowId, { type: 'u32' })];
+  const result = await buildAndSubmit(walletAddress, 'confirm_payment', args);
+  return result ? Boolean(scValToNative(result)) : false;
+}
+
+export async function claimRefund(
+  walletAddress: string,
+  escrowId: number
+): Promise<boolean> {
+  const args = [nativeToScVal(escrowId, { type: 'u32' })];
+  const result = await buildAndSubmit(walletAddress, 'claim_refund', args);
+  return result ? Boolean(scValToNative(result)) : false;
+}
+
+export async function raiseDispute(
+  walletAddress: string,
+  escrowId: number
+): Promise<boolean> {
+  const args = [
+    nativeToScVal(escrowId, { type: 'u32' }),
+    new Address(walletAddress).toScVal(),
+  ];
+  const result = await buildAndSubmit(walletAddress, 'raise_dispute', args);
+  return result ? Boolean(scValToNative(result)) : false;
+}
+
+export interface ChainEscrow {
+  onChainId: number;
+  ofw: string;
+  family: string;
+  token: string;
+  amountPhp: number;
+  billType: string;
+  deadline: string;
+  status: 'locked' | 'fulfilled' | 'expired' | 'disputed';
+  boxMinted: boolean;
+}
+
+export async function getEscrow(
+  walletAddress: string,
+  escrowId: number
+): Promise<ChainEscrow | null> {
+  try {
+    const args = [nativeToScVal(escrowId, { type: 'u32' })];
+    const result = await simulateOnly(walletAddress, 'get_escrow', args);
+    if (!result) return null;
+
+    const raw = scValToNative(result) as Record<string, unknown>;
+
+    const statusMap: Record<string, ChainEscrow['status']> = {
+      Active: 'locked',
+      Fulfilled: 'fulfilled',
+      Expired: 'expired',
+      Disputed: 'disputed',
+    };
+
+    const statusRaw = result.map()?.find(e => e.key().sym()?.toString() === 'status');
+    const statusStr = statusRaw
+      ? statusRaw.val().vec()?.[0].sym()?.toString() ?? 'Active'
+      : 'Active';
+
+    const billTypeRaw = result.map()?.find(e => e.key().sym()?.toString() === 'bill_type');
+    const billTypeStr = billTypeRaw ? scValToBillType(billTypeRaw.val()) : 'custom';
+
+    return {
+      onChainId: escrowId,
+      ofw: String(raw.ofw ?? ''),
+      family: String(raw.family ?? ''),
+      token: String(raw.token ?? ''),
+      amountPhp: tokenUnitsToPHP(BigInt(String(raw.amount ?? '0'))),
+      billType: billTypeStr,
+      deadline: new Date(Number(raw.deadline ?? 0) * 1000).toISOString(),
+      status: statusMap[statusStr] ?? 'locked',
+      boxMinted: Boolean(raw.box_minted),
+    };
+  } catch {
+    return null;
+  }
+}
+
+export interface ChainBox {
+  boxNumber: number;
+  amountPhp: number;
+  timestamp: number;
+  billType: string;
+}
+
+export async function getBoxCount(walletAddress: string): Promise<number> {
+  try {
+    const args = [new Address(walletAddress).toScVal()];
+    const result = await simulateOnly(walletAddress, 'get_box_count', args);
+    return result ? Number(scValToNative(result)) : 0;
+  } catch {
+    return 0;
+  }
+}
+
+export async function getBox(
+  walletAddress: string,
+  boxNumber: number
+): Promise<ChainBox | null> {
+  try {
+    const args = [
+      new Address(walletAddress).toScVal(),
+      nativeToScVal(boxNumber, { type: 'u32' }),
+    ];
+    const result = await simulateOnly(walletAddress, 'get_box', args);
+    if (!result) return null;
+
+    const raw = scValToNative(result) as Record<string, unknown>;
+    const billTypeRaw = result.map()?.find(e => e.key().sym()?.toString() === 'bill_type');
+    const billTypeStr = billTypeRaw ? scValToBillType(billTypeRaw.val()) : 'custom';
+
+    return {
+      boxNumber,
+      amountPhp: tokenUnitsToPHP(BigInt(String(raw.amount ?? '0'))),
+      timestamp: Number(raw.timestamp ?? 0),
+      billType: billTypeStr,
+    };
+  } catch {
+    return null;
+  }
+}
+
+export async function getTier(walletAddress: string): Promise<string> {
+  try {
+    const args = [new Address(walletAddress).toScVal()];
+    const result = await simulateOnly(walletAddress, 'get_tier', args);
+    return result ? String(scValToNative(result)) : 'Common';
+  } catch {
+    return 'Common';
+  }
+}
+
+export async function loadAllBoxes(walletAddress: string): Promise<ChainBox[]> {
+  const count = await getBoxCount(walletAddress);
+  const boxes: ChainBox[] = [];
+  for (let i = 1; i <= count; i++) {
+    const box = await getBox(walletAddress, i);
+    if (box) boxes.push(box);
+  }
+  return boxes;
+}

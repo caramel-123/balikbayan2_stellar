@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { ArrowLeft, Check } from 'lucide-react';
+import { ArrowLeft, Check, Wallet, ExternalLink } from 'lucide-react';
 import { Button } from '../components/Button';
 import { Input } from '../components/Input';
-import { BillTypeIcon, BillType, billTypeConfig } from '../components/BillTypeIcon';
+import { BillType, billTypeConfig } from '../components/BillTypeIcon';
 import { useApp } from '../context/AppContext';
 import { useToast } from '../components/Toast';
 import confetti from 'canvas-confetti';
@@ -16,6 +16,9 @@ interface SendMoneyData {
   deadline: string;
 }
 
+// SEP-24 anchor for PHP → USDC on-ramp (MoneyGram / SDF testnet demo)
+const ONRAMP_ANCHOR = 'https://testanchor.stellar.org';
+
 export function SendMoneyWizard({ onNavigate }: { onNavigate: (page: string) => void }) {
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState<SendMoneyData>({
@@ -27,58 +30,132 @@ export function SendMoneyWizard({ onNavigate }: { onNavigate: (page: string) => 
     deadline: ''
   });
   const [showSuccess, setShowSuccess] = useState(false);
-  const { addEscrow: addPromise, addNFTBox, nftBoxes } = useApp();
+  const [showOnRamp, setShowOnRamp] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const { createEscrowOnChain, addEscrow, contractReady, walletAddress } = useApp();
   const { showToast } = useToast();
 
-  const updateFormData = (updates: Partial<SendMoneyData>) => {
+  const updateFormData = (updates: Partial<SendMoneyData>) =>
     setFormData(prev => ({ ...prev, ...updates }));
+
+  const handleNext = () => { if (step < 4) setStep(step + 1); };
+  const handleBack = () => { if (step > 1) setStep(step - 1); };
+
+  const handleSubmit = async () => {
+    if (!formData.billType || !formData.deadline) return;
+
+    setIsSubmitting(true);
+    try {
+      if (contractReady && formData.recipientAddress) {
+        await createEscrowOnChain({
+          recipientAddress: formData.recipientAddress,
+          recipientName: formData.recipientName || 'Family',
+          amount: parseFloat(formData.amount) || 0,
+          billType: formData.billType,
+          billDetails: formData.billDetails,
+          deadline: formData.deadline,
+        });
+        showToast('success', 'Promise locked on Stellar blockchain!');
+      } else {
+        // Mock mode — no contract deployed yet
+        addEscrow({
+          id: Math.random().toString(36).substring(2, 11),
+          recipientAddress: formData.recipientAddress || 'GFAMILY...XYZ1',
+          recipientName: formData.recipientName || 'Family',
+          amount: parseFloat(formData.amount) || 0,
+          billType: formData.billType,
+          billDetails: formData.billDetails,
+          status: 'locked',
+          deadline: formData.deadline || new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
+          createdAt: new Date().toISOString(),
+        });
+        if (!contractReady) {
+          showToast('info', 'Demo mode: set VITE_CONTRACT_ID to go live');
+        }
+      }
+
+      confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+      setShowSuccess(true);
+    } catch (err) {
+      showToast('error', err instanceof Error ? err.message : 'Transaction failed');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
-  const handleNext = () => {
-    if (step < 4) setStep(step + 1);
+  const handleReset = () => {
+    setShowSuccess(false);
+    setStep(1);
+    setFormData({ recipientAddress: '', recipientName: '', amount: '', billType: null, billDetails: {}, deadline: '' });
   };
 
-  const handleBack = () => {
-    if (step > 1) setStep(step - 1);
-  };
+  if (showOnRamp) {
+    return (
+      <div className="max-w-2xl mx-auto px-4 py-8">
+        <button
+          onClick={() => setShowOnRamp(false)}
+          className="flex items-center gap-2 text-[#64748B] hover:text-[#1E293B] mb-6"
+        >
+          <ArrowLeft size={20} /> Back
+        </button>
 
-  const handleSubmit = () => {
-    if (!formData.billType) return;
+        <div className="bg-white rounded-lg p-8 shadow-sm border border-[#E2E8F0] space-y-6">
+          <div className="flex items-center gap-3">
+            <div className="w-12 h-12 bg-[#1A3A5C] rounded-full flex items-center justify-center">
+              <Wallet size={24} className="text-white" />
+            </div>
+            <div>
+              <h2 className="text-2xl font-bold text-[#1E293B]">Add USDC to Your Wallet</h2>
+              <p className="text-[#64748B]">Powered by Stellar Anchor Protocol (SEP-24)</p>
+            </div>
+          </div>
 
-    const promise = {
-      id: Math.random().toString(36).substr(2, 9),
-      recipientAddress: formData.recipientAddress || 'GFAMILY...XYZ1',
-      recipientName: formData.recipientName || 'Nanay Rosa',
-      amount: parseFloat(formData.amount) || 2200,
-      billType: formData.billType,
-      billDetails: formData.billDetails,
-      status: 'locked' as const,
-      deadline: formData.deadline || new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
-      createdAt: new Date().toISOString()
-    };
+          <div className="bg-[#F0F6FF] rounded-lg p-4 space-y-2">
+            <p className="text-sm font-semibold text-[#1A3A5C]">How it works</p>
+            <ol className="text-sm text-[#64748B] space-y-1 list-decimal list-inside">
+              <li>Click "Go to Anchor" below</li>
+              <li>Deposit PHP via GCash, Maya, or bank transfer</li>
+              <li>Receive USDC in your Freighter wallet</li>
+              <li>Come back and send your promise</li>
+            </ol>
+          </div>
 
-    addPromise(promise);
+          <div className="space-y-3">
+            <div className="flex justify-between text-sm">
+              <span className="text-[#64748B]">Your Stellar address</span>
+              <span className="font-mono text-[#1E293B] truncate max-w-[200px]">{walletAddress}</span>
+            </div>
+            <div className="flex justify-between text-sm">
+              <span className="text-[#64748B]">Rate</span>
+              <span className="font-semibold text-[#1E293B]">₱56 ≈ 1 USDC</span>
+            </div>
+            <div className="flex justify-between text-sm">
+              <span className="text-[#64748B]">Fee</span>
+              <span className="font-semibold text-[#22C55E]">Less than ₱1</span>
+            </div>
+          </div>
 
-    const newBox = {
-      id: Math.random().toString(36).substr(2, 9),
-      boxNumber: nftBoxes.length + 1,
-      amount: promise.amount,
-      date: new Date().toLocaleDateString(),
-      tier: 'common' as const,
-      billType: promise.billType,
-      transactionHash: 'TX' + Math.random().toString(36).substr(2, 16).toUpperCase(),
-      countryFlag: '🇵🇭'
-    };
+          <div className="space-y-3">
+            <Button
+              className="w-full"
+              onClick={() => window.open(`${ONRAMP_ANCHOR}/sep24/transactions/deposit/interactive?asset_code=USDC&account=${walletAddress}`, '_blank')}
+            >
+              <ExternalLink size={16} className="mr-2" />
+              Go to Anchor (Deposit PHP → USDC)
+            </Button>
+            <Button variant="secondary" className="w-full" onClick={() => setShowOnRamp(false)}>
+              I already have USDC
+            </Button>
+          </div>
 
-    confetti({
-      particleCount: 100,
-      spread: 70,
-      origin: { y: 0.6 }
-    });
-
-    setShowSuccess(true);
-    showToast('success', 'Your promise is locked!');
-  };
+          <p className="text-xs text-center text-[#64748B]">
+            Using Stellar testnet anchor. For mainnet, connect a licensed PHP anchor like Coins.ph.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   if (showSuccess) {
     return (
@@ -91,21 +168,13 @@ export function SendMoneyWizard({ onNavigate }: { onNavigate: (page: string) => 
           <p className="text-[#64748B]">
             {formData.recipientName || 'Your family'} has been notified. A BalikBayan Box will be minted once the payment is confirmed.
           </p>
+          {contractReady && (
+            <div className="bg-[#F0F6FF] rounded-lg p-3 text-sm text-[#1A3A5C] font-mono">
+              Funds secured on Stellar blockchain ✓
+            </div>
+          )}
           <div className="flex gap-4 justify-center pt-4">
-            <Button onClick={() => {
-              setShowSuccess(false);
-              setStep(1);
-              setFormData({
-                recipientAddress: '',
-                recipientName: '',
-                amount: '',
-                billType: null,
-                billDetails: {},
-                deadline: ''
-              });
-            }}>
-              Send Another Promise
-            </Button>
+            <Button onClick={handleReset}>Send Another Promise</Button>
             <Button variant="secondary" onClick={() => onNavigate('dashboard')}>
               Go to Dashboard
             </Button>
@@ -121,12 +190,19 @@ export function SendMoneyWizard({ onNavigate }: { onNavigate: (page: string) => 
         onClick={() => step === 1 ? onNavigate('dashboard') : handleBack()}
         className="flex items-center gap-2 text-[#64748B] hover:text-[#1E293B] mb-6"
       >
-        <ArrowLeft size={20} />
-        Back
+        <ArrowLeft size={20} /> Back
       </button>
 
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-[#1E293B] mb-6">Send Money</h1>
+        <div className="flex justify-between items-center mb-4">
+          <h1 className="text-3xl font-bold text-[#1E293B]">Send Money</h1>
+          <button
+            onClick={() => setShowOnRamp(true)}
+            className="text-sm text-[#2563A0] hover:underline flex items-center gap-1"
+          >
+            <Wallet size={14} /> Need USDC?
+          </button>
+        </div>
 
         <div className="flex items-center gap-2">
           {[1, 2, 3, 4].map(i => (
@@ -138,15 +214,11 @@ export function SendMoneyWizard({ onNavigate }: { onNavigate: (page: string) => 
                 {step > i ? <Check size={20} /> : i}
               </div>
               {i < 4 && (
-                <div className={`
-                  flex-1 h-1 mx-2
-                  ${step > i ? 'bg-[#1A3A5C]' : 'bg-[#E2E8F0]'}
-                `}></div>
+                <div className={`flex-1 h-1 mx-2 ${step > i ? 'bg-[#1A3A5C]' : 'bg-[#E2E8F0]'}`} />
               )}
             </div>
           ))}
         </div>
-
         <p className="text-sm text-[#64748B] mt-2">Step {step} of 4</p>
       </div>
 
@@ -154,28 +226,21 @@ export function SendMoneyWizard({ onNavigate }: { onNavigate: (page: string) => 
         {step === 1 && (
           <div className="space-y-6">
             <h2 className="text-2xl font-semibold text-[#1E293B]">Who are you sending to?</h2>
-
             <Input
               label="Recipient Name"
               placeholder="e.g., Nanay Rosa"
               value={formData.recipientName}
-              onChange={(e) => updateFormData({ recipientName: e.target.value })}
+              onChange={e => updateFormData({ recipientName: e.target.value })}
             />
-
             <Input
               label="Recipient Stellar Wallet Address"
               placeholder="GXXX...XXXX"
               value={formData.recipientAddress}
-              onChange={(e) => updateFormData({ recipientAddress: e.target.value })}
-              helperText="Or select from saved contacts"
+              onChange={e => updateFormData({ recipientAddress: e.target.value })}
+              helperText="Ask your family to get their Freighter wallet address"
             />
-
             <div className="pt-4">
-              <Button
-                onClick={handleNext}
-                disabled={!formData.recipientName}
-                className="w-full"
-              >
+              <Button onClick={handleNext} disabled={!formData.recipientName} className="w-full">
                 Next
               </Button>
             </div>
@@ -185,14 +250,13 @@ export function SendMoneyWizard({ onNavigate }: { onNavigate: (page: string) => 
         {step === 2 && (
           <div className="space-y-6">
             <h2 className="text-2xl font-semibold text-[#1E293B]">How much?</h2>
-
             <div className="space-y-2">
               <Input
                 label="Amount in PHP"
                 type="number"
                 placeholder="0.00"
                 value={formData.amount}
-                onChange={(e) => updateFormData({ amount: e.target.value })}
+                onChange={e => updateFormData({ amount: e.target.value })}
                 className="text-2xl font-mono"
               />
               {formData.amount && (
@@ -202,7 +266,6 @@ export function SendMoneyWizard({ onNavigate }: { onNavigate: (page: string) => 
               )}
               <p className="text-sm text-[#22C55E]">Fee: less than ₱1</p>
             </div>
-
             <div className="pt-4">
               <Button
                 onClick={handleNext}
@@ -218,7 +281,6 @@ export function SendMoneyWizard({ onNavigate }: { onNavigate: (page: string) => 
         {step === 3 && (
           <div className="space-y-6">
             <h2 className="text-2xl font-semibold text-[#1E293B]">What is this money for?</h2>
-
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
               {Object.entries(billTypeConfig).map(([type, config]) => {
                 const Icon = config.icon;
@@ -227,22 +289,18 @@ export function SendMoneyWizard({ onNavigate }: { onNavigate: (page: string) => 
                   <button
                     key={type}
                     onClick={() => updateFormData({ billType, billDetails: {} })}
-                    className={`
-                      p-4 rounded-lg border-2 transition-all hover:shadow-md
-                      ${formData.billType === type
+                    className={`p-4 rounded-lg border-2 transition-all hover:shadow-md ${
+                      formData.billType === type
                         ? 'border-[#2563A0] bg-[#F0F6FF] shadow-md'
                         : 'border-[#E2E8F0] hover:border-[#2563A0]'
-                      }
-                    `}
+                    }`}
                   >
                     <div className="flex flex-col items-center gap-2">
                       <div className={`${config.bg} ${config.color} p-3 rounded-full`}>
                         <Icon size={24} />
                       </div>
                       <span className="text-sm font-medium text-[#1E293B]">{config.label}</span>
-                      {formData.billType === type && (
-                        <Check size={16} className="text-[#2563A0]" />
-                      )}
+                      {formData.billType === type && <Check size={16} className="text-[#2563A0]" />}
                     </div>
                   </button>
                 );
@@ -251,116 +309,41 @@ export function SendMoneyWizard({ onNavigate }: { onNavigate: (page: string) => 
 
             {formData.billType && (
               <div className="space-y-4 pt-4 border-t border-[#E2E8F0]">
-                {formData.billType === 'tuition' && (
+                {(formData.billType === 'tuition') && (
                   <>
-                    <Input
-                      label="School Name"
-                      placeholder="e.g., Polytechnic University of the Philippines"
+                    <Input label="School Name" placeholder="e.g., Polytechnic University of the Philippines"
                       value={formData.billDetails.school || ''}
-                      onChange={(e) => updateFormData({
-                        billDetails: { ...formData.billDetails, school: e.target.value }
-                      })}
-                    />
-                    <Input
-                      label="Student Name"
-                      placeholder="e.g., Anak Miguel"
+                      onChange={e => updateFormData({ billDetails: { ...formData.billDetails, school: e.target.value } })} />
+                    <Input label="Student Name" placeholder="e.g., Anak Miguel"
                       value={formData.billDetails.student || ''}
-                      onChange={(e) => updateFormData({
-                        billDetails: { ...formData.billDetails, student: e.target.value }
-                      })}
-                    />
+                      onChange={e => updateFormData({ billDetails: { ...formData.billDetails, student: e.target.value } })} />
                   </>
                 )}
-
-                {formData.billType === 'electricity' && (
+                {(['electricity', 'water', 'internet'] as BillType[]).includes(formData.billType) && (
                   <>
-                    <Input
-                      label="Provider"
-                      placeholder="e.g., Meralco"
+                    <Input label="Provider" placeholder="e.g., Meralco / Maynilad / PLDT"
                       value={formData.billDetails.provider || ''}
-                      onChange={(e) => updateFormData({
-                        billDetails: { ...formData.billDetails, provider: e.target.value }
-                      })}
-                    />
-                    <Input
-                      label="Account Number"
-                      placeholder="Enter account number"
+                      onChange={e => updateFormData({ billDetails: { ...formData.billDetails, provider: e.target.value } })} />
+                    <Input label="Account Number" placeholder="Enter account number"
                       value={formData.billDetails.accountNumber || ''}
-                      onChange={(e) => updateFormData({
-                        billDetails: { ...formData.billDetails, accountNumber: e.target.value }
-                      })}
-                    />
+                      onChange={e => updateFormData({ billDetails: { ...formData.billDetails, accountNumber: e.target.value } })} />
                   </>
                 )}
-
-                {formData.billType === 'water' && (
-                  <>
-                    <Input
-                      label="Provider"
-                      placeholder="e.g., Maynilad, Manila Water"
-                      value={formData.billDetails.provider || ''}
-                      onChange={(e) => updateFormData({
-                        billDetails: { ...formData.billDetails, provider: e.target.value }
-                      })}
-                    />
-                    <Input
-                      label="Account Number"
-                      placeholder="Enter account number"
-                      value={formData.billDetails.accountNumber || ''}
-                      onChange={(e) => updateFormData({
-                        billDetails: { ...formData.billDetails, accountNumber: e.target.value }
-                      })}
-                    />
-                  </>
-                )}
-
-                {formData.billType === 'internet' && (
-                  <>
-                    <Input
-                      label="Provider"
-                      placeholder="e.g., PLDT, Globe, Converge"
-                      value={formData.billDetails.provider || ''}
-                      onChange={(e) => updateFormData({
-                        billDetails: { ...formData.billDetails, provider: e.target.value }
-                      })}
-                    />
-                    <Input
-                      label="Account Number"
-                      placeholder="Enter account number"
-                      value={formData.billDetails.accountNumber || ''}
-                      onChange={(e) => updateFormData({
-                        billDetails: { ...formData.billDetails, accountNumber: e.target.value }
-                      })}
-                    />
-                  </>
-                )}
-
                 {formData.billType === 'medical' && (
                   <>
-                    <Input
-                      label="Hospital/Clinic Name"
-                      placeholder="e.g., Philippine General Hospital"
+                    <Input label="Hospital/Clinic Name" placeholder="e.g., Philippine General Hospital"
                       value={formData.billDetails.hospital || ''}
-                      onChange={(e) => updateFormData({
-                        billDetails: { ...formData.billDetails, hospital: e.target.value }
-                      })}
-                    />
-                    <Input
-                      label="Patient Name"
-                      placeholder="Enter patient name"
+                      onChange={e => updateFormData({ billDetails: { ...formData.billDetails, hospital: e.target.value } })} />
+                    <Input label="Patient Name" placeholder="Enter patient name"
                       value={formData.billDetails.patient || ''}
-                      onChange={(e) => updateFormData({
-                        billDetails: { ...formData.billDetails, patient: e.target.value }
-                      })}
-                    />
+                      onChange={e => updateFormData({ billDetails: { ...formData.billDetails, patient: e.target.value } })} />
                   </>
                 )}
-
                 <Input
                   label="Release funds if not confirmed by"
                   type="date"
                   value={formData.deadline}
-                  onChange={(e) => updateFormData({ deadline: e.target.value })}
+                  onChange={e => updateFormData({ deadline: e.target.value })}
                   helperText="Minimum 3 days from today"
                   min={new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]}
                 />
@@ -368,11 +351,7 @@ export function SendMoneyWizard({ onNavigate }: { onNavigate: (page: string) => 
             )}
 
             <div className="pt-4">
-              <Button
-                onClick={handleNext}
-                disabled={!formData.billType || !formData.deadline}
-                className="w-full"
-              >
+              <Button onClick={handleNext} disabled={!formData.billType || !formData.deadline} className="w-full">
                 Next
               </Button>
             </div>
@@ -391,6 +370,10 @@ export function SendMoneyWizard({ onNavigate }: { onNavigate: (page: string) => 
               <div className="flex justify-between">
                 <span className="text-[#64748B]">Amount</span>
                 <span className="font-mono font-semibold text-[#1E293B]">₱{parseFloat(formData.amount || '0').toLocaleString()}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-[#64748B]">USDC equivalent</span>
+                <span className="font-mono font-semibold text-[#1E293B]">{(parseFloat(formData.amount || '0') / 56).toFixed(2)} USDC</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-[#64748B]">Bill Type</span>
@@ -412,6 +395,17 @@ export function SendMoneyWizard({ onNavigate }: { onNavigate: (page: string) => 
               </div>
             </div>
 
+            {contractReady ? (
+              <div className="flex items-center gap-2 p-3 bg-green-50 border border-green-200 rounded-lg">
+                <Check size={16} className="text-green-600" />
+                <span className="text-sm text-green-700">Will be secured on Stellar blockchain</span>
+              </div>
+            ) : (
+              <div className="flex items-center gap-2 p-3 bg-amber-50 border border-amber-200 rounded-lg">
+                <span className="text-sm text-amber-700">⚠️ Demo mode — set VITE_CONTRACT_ID for live transactions</span>
+              </div>
+            )}
+
             <div className="flex items-start gap-2">
               <input type="checkbox" id="confirm" className="mt-1" />
               <label htmlFor="confirm" className="text-sm text-[#64748B]">
@@ -420,8 +414,8 @@ export function SendMoneyWizard({ onNavigate }: { onNavigate: (page: string) => 
             </div>
 
             <div className="pt-4">
-              <Button onClick={handleSubmit} className="w-full">
-                Lock Funds and Send Promise
+              <Button onClick={handleSubmit} loading={isSubmitting} className="w-full">
+                {isSubmitting ? 'Signing & Sending…' : 'Lock Funds and Send Promise'}
               </Button>
               <p className="text-xs text-center text-[#64748B] mt-3">
                 A BalikBayan Box will be minted to your wallet once the family confirms payment

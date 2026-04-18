@@ -12,10 +12,11 @@ import { useToast } from '../components/Toast';
 import { copyToClipboard } from '../utils/clipboard';
 
 export function OFWDashboard({ onNavigate }: { onNavigate: (page: string) => void }) {
-  const { escrows: promises, nftBoxes, currentTier, updateEscrow: updatePromise } = useApp();
+  const { escrows: promises, nftBoxes, currentTier, claimRefundOnChain, updateEscrow: updatePromise } = useApp();
   const { showToast } = useToast();
   const [selectedPromise, setSelectedPromise] = useState<typeof promises[0] | null>(null);
   const [selectedBox, setSelectedBox] = useState<typeof nftBoxes[0] | null>(null);
+  const [isCancelling, setIsCancelling] = useState(false);
 
   const activePromises = promises.filter(p => p.status === 'locked' || p.status === 'pending');
   const totalSentThisMonth = promises
@@ -36,10 +37,23 @@ export function OFWDashboard({ onNavigate }: { onNavigate: (page: string) => voi
     return `${days} ${days === 1 ? 'day' : 'days'} left`;
   };
 
-  const handleCancelPromise = (promiseId: string) => {
-    updatePromise(promiseId, { status: 'expired' });
-    setSelectedPromise(null);
-    showToast('success', 'Promise cancelled successfully');
+  const handleCancelPromise = async (promiseId: string) => {
+    setIsCancelling(true);
+    try {
+      const escrow = promises.find(p => p.id === promiseId);
+      if (escrow?.onChainId) {
+        await claimRefundOnChain(promiseId);
+        showToast('success', 'Refund claimed on Stellar blockchain');
+      } else {
+        updatePromise(promiseId, { status: 'expired' });
+        showToast('success', 'Promise cancelled');
+      }
+      setSelectedPromise(null);
+    } catch (err) {
+      showToast('error', err instanceof Error ? err.message : 'Failed to cancel');
+    } finally {
+      setIsCancelling(false);
+    }
   };
 
   const handleCopyAddress = async (address: string) => {
@@ -51,7 +65,7 @@ export function OFWDashboard({ onNavigate }: { onNavigate: (page: string) => voi
     }
   };
 
-  const handleShareBox = (box: typeof nftBoxes[0]) => {
+  const handleShareBox = (_box: typeof nftBoxes[0]) => {
     showToast('success', 'Box image saved! Share with your family and friends.');
   };
 
@@ -193,7 +207,7 @@ export function OFWDashboard({ onNavigate }: { onNavigate: (page: string) => voi
         <h2 className="text-xl font-semibold text-[#1E293B] mb-4">Recent Activity</h2>
         <Card>
           <div className="space-y-4">
-            {promises.slice(-5).reverse().map((promise, idx) => (
+            {promises.slice(-5).reverse().map((promise) => (
               <div key={promise.id} className="flex items-start gap-3">
                 <div className={`w-2 h-2 rounded-full mt-2 ${
                   promise.status === 'fulfilled' ? 'bg-[#22C55E]' :
@@ -305,7 +319,7 @@ export function OFWDashboard({ onNavigate }: { onNavigate: (page: string) => voi
 
             <div className="flex gap-3 pt-4 border-t border-[#E2E8F0]">
               <button
-                onClick={() => handleViewOnExplorer('TX' + Math.random().toString(36).substr(2, 16).toUpperCase())}
+                onClick={() => handleViewOnExplorer('TX' + Math.random().toString(36).substring(2, 18).toUpperCase())}
                 className="flex-1 flex items-center justify-center gap-2 px-4 py-2 border border-[#E2E8F0] text-[#1E293B] rounded-lg hover:bg-[#F0F6FF] transition-colors"
               >
                 <ExternalLink size={16} />
@@ -314,10 +328,11 @@ export function OFWDashboard({ onNavigate }: { onNavigate: (page: string) => voi
               {selectedPromise.status === 'locked' && (
                 <Button
                   variant="destructive"
+                  loading={isCancelling}
                   onClick={() => handleCancelPromise(selectedPromise.id)}
                   className="flex-1"
                 >
-                  Cancel Promise
+                  {selectedPromise.onChainId ? 'Claim Refund' : 'Cancel Promise'}
                 </Button>
               )}
             </div>
