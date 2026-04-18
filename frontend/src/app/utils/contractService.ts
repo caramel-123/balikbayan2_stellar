@@ -140,6 +140,17 @@ async function simulateOnly(
   return success.result?.retval ?? null;
 }
 
+// ── Helpers ───────────────────────────────────────────────────────────────────
+
+function assertAddress(addr: string, label: string) {
+  if (!addr || addr.trim().length === 0) {
+    throw new Error(`${label} address is empty. Make sure your wallet is connected.`);
+  }
+  if (!/^[GC][A-Z2-7]{55}$/.test(addr.trim())) {
+    throw new Error(`${label} address is invalid: "${addr}". Must be a Stellar address starting with G or C.`);
+  }
+}
+
 // ── Public API ────────────────────────────────────────────────────────────────
 
 export async function createEscrow(
@@ -149,6 +160,10 @@ export async function createEscrow(
   billType: string,
   deadlineDate: string
 ): Promise<number> {
+  assertAddress(walletAddress, 'Wallet');
+  assertAddress(familyAddress, 'Recipient');
+  assertAddress(TOKEN_CONTRACT_ID, 'Token');
+
   const amount = phpToTokenUnits(amountPhp);
   const deadline = BigInt(Math.floor(new Date(deadlineDate).getTime() / 1000));
 
@@ -170,6 +185,7 @@ export async function confirmPayment(
   walletAddress: string,
   escrowId: number
 ): Promise<boolean> {
+  assertAddress(walletAddress, 'Wallet');
   const args = [nativeToScVal(escrowId, { type: 'u32' })];
   const result = await buildAndSubmit(walletAddress, 'confirm_payment', args);
   return result ? Boolean(scValToNative(result)) : false;
