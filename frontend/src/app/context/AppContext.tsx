@@ -143,8 +143,9 @@ export function AppProvider({ children }: { children: ReactNode }) {
     try {
       const connected = await isConnected();
       if (!connected) {
-        setWalletError('Freighter wallet not found. Please install the Freighter extension.');
-        return;
+        const msg = 'Freighter not found. Install the Freighter extension at freighter.app';
+        setWalletError(msg);
+        throw new Error(msg);
       }
       const allowed = await isAllowed();
       if (!allowed) {
@@ -152,10 +153,16 @@ export function AppProvider({ children }: { children: ReactNode }) {
       }
       const addressResult = await getAddress();
       if (addressResult.error) {
-        setWalletError(addressResult.error.message ?? 'Failed to get wallet address.');
-        return;
+        const msg = addressResult.error.message ?? 'Failed to get wallet address.';
+        setWalletError(msg);
+        throw new Error(msg);
       }
       const addr = addressResult.address;
+      if (!addr) {
+        const msg = 'No address returned from Freighter. Make sure you are logged in.';
+        setWalletError(msg);
+        throw new Error(msg);
+      }
       setWalletAddress(addr);
       setWalletConnected(true);
 

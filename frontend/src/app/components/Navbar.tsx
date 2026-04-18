@@ -13,7 +13,9 @@ export function Navbar() {
     setConnecting(true);
     await connectWallet();
     setConnecting(false);
-    setShowRoleModal(true);
+    if (walletAddress) {
+      setShowRoleModal(true);
+    }
   };
 
   return (
@@ -84,7 +86,7 @@ export function Navbar() {
                     <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-[#E2E8F0] py-1">
                       <button
                         onClick={() => {
-                          navigator.clipboard.writeText('GCABC123XYZ1');
+                          navigator.clipboard.writeText(walletAddress);
                           setShowWalletMenu(false);
                         }}
                         className="w-full text-left px-4 py-2 hover:bg-[#F0F6FF] text-[#1E293B]"
