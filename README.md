@@ -163,6 +163,22 @@ cd BalikBayan_stellar
 npm install
 npm run dev
 ```
+<img width="1248" height="694" alt="Screenshot 2026-04-18 at 1 50 09 PM" src="https://github.com/user-attachments/assets/71a0d5bd-f492-400f-8f32-bba828842e83" />
+<img width="1239" height="718" alt="Screenshot 2026-04-18 at 1 50 23 PM" src="https://github.com/user-attachments/assets/b09fa6ae-73d9-4f1a-93ca-173804d8fe47" />
+<img width="1251" height="732" alt="Screenshot 2026-04-18 at 1 50 52 PM" src="https://github.com/user-attachments/assets/581048db-ba30-4076-bdae-c5a45dbd4167" />
+<img width="812" height="644" alt="Screenshot 2026-04-18 at 1 51 28 PM" src="https://github.com/user-attachments/assets/4e1fbf5d-fcd1-4f26-aa88-e4663bf6f7d6" />
+<img width="813" height="590" alt="Screenshot 2026-04-18 at 1 51 46 PM" src="https://github.com/user-attachments/assets/0505d144-4d63-423e-86b9-23ce8019b292" />
+<img width="402" height="601" alt="Screenshot 2026-04-18 at 1 52 32 PM" src="https://github.com/user-attachments/assets/bd675386-f156-46ea-8dbd-9443d2055716" />
+<img width="553" height="607" alt="Screenshot 2026-04-18 at 1 52 46 PM" src="https://github.com/user-attachments/assets/92c9f3ed-7a5b-4c79-87fa-3c4ad41730e7" />
+<img width="466" height="316" alt="Screenshot 2026-04-18 at 1 53 04 PM" src="https://github.com/user-attachments/assets/8118afc0-b71c-4ceb-b620-e16e995c6cc4" />
+<img width="902" height="605" alt="Screenshot 2026-04-18 at 1 53 19 PM" src="https://github.com/user-attachments/assets/f2cb14e0-0d23-4877-984c-9243329f121f" />
+<img width="478" height="518" alt="Screenshot 2026-04-18 at 1 53 44 PM" src="https://github.com/user-attachments/assets/92109cbf-9aba-4826-aa01-269d8d18ae44" />
+
+
+
+
+
+
 
 App runs at https://balikbayan-26xp25x1q-caramel-123s-projects.vercel.app/
 
@@ -237,6 +253,8 @@ stellar contract invoke \
   -- get_box_count \
   --ofw <OFW_ADDRESS>
 ```
+<img width="1251" height="742" alt="Screenshot 2026-04-18 at 1 49 45 PM" src="https://github.com/user-attachments/assets/18037635-2807-4d07-ad5b-5dc3c02d4c9e" />
+
 
 ## Target Users
 Filipino Overseas Workers earning PHP 30,000 to 150,000 per month abroad who regularly send money home for essential household expenses. They lose hundreds of pesos per transaction in bank fees, have zero visibility on how funds are used, and have no verifiable proof of their financial consistency to show institutions. Every peso saved on fees is a bill that gets paid. Every box minted is a sacrifice that gets remembered.
