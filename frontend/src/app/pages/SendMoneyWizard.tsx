@@ -42,8 +42,16 @@ export function SendMoneyWizard({ onNavigate }: { onNavigate: (page: string) => 
   const handleNext = () => { if (step < 4) setStep(step + 1); };
   const handleBack = () => { if (step > 1) setStep(step - 1); };
 
+  const isValidStellarAddress = (addr: string) =>
+    /^G[A-Z2-7]{55}$/.test(addr.trim());
+
   const handleSubmit = async () => {
     if (!formData.billType || !formData.deadline) return;
+
+    if (contractReady && !isValidStellarAddress(formData.recipientAddress)) {
+      showToast('error', 'Enter a valid Stellar address (starts with G, 56 characters)');
+      return;
+    }
 
     setIsSubmitting(true);
     try {
@@ -237,10 +245,18 @@ export function SendMoneyWizard({ onNavigate }: { onNavigate: (page: string) => 
               placeholder="GXXX...XXXX"
               value={formData.recipientAddress}
               onChange={e => updateFormData({ recipientAddress: e.target.value })}
-              helperText="Ask your family to get their Freighter wallet address"
+              helperText={
+                formData.recipientAddress && !isValidStellarAddress(formData.recipientAddress)
+                  ? '⚠️ Must start with G and be 56 characters'
+                  : 'Ask your family to get their Freighter wallet address'
+              }
             />
             <div className="pt-4">
-              <Button onClick={handleNext} disabled={!formData.recipientName} className="w-full">
+              <Button
+                onClick={handleNext}
+                disabled={!formData.recipientName || (contractReady && !isValidStellarAddress(formData.recipientAddress))}
+                className="w-full"
+              >
                 Next
               </Button>
             </div>
