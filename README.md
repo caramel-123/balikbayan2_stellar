@@ -164,7 +164,7 @@ npm install
 npm run dev
 ```
 
-App runs at http://localhost:5173
+App runs at https://balikbayan-26xp25x1q-caramel-123s-projects.vercel.app/
 
 ### Environment Variables (.env)
 ```
