@@ -165,8 +165,17 @@ function assertAddress(addr: string, label: string) {
   if (!addr || addr.trim().length === 0) {
     throw new Error(`${label} address is empty. Make sure your wallet is connected.`);
   }
-  if (!/^[GC][A-Z2-7]{55}$/.test(addr.trim())) {
-    throw new Error(`${label} address is invalid: "${addr}". Must be a Stellar address starting with G or C.`);
+  const trimmed = addr.trim();
+  if (trimmed.startsWith('M')) {
+    throw new Error(
+      `${label} address is a muxed account (starts with M). Please switch to a standard G... account in Freighter settings.`
+    );
+  }
+  if (!/^[GC][A-Z2-7]{55}$/.test(trimmed)) {
+    throw new Error(
+      `${label} address is invalid: "${trimmed}". Must be a Stellar G... account address. ` +
+      `If Freighter shows a different format, switch to a standard account in Freighter.`
+    );
   }
 }
 

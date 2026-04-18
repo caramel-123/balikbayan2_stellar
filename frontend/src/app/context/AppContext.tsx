@@ -1,9 +1,33 @@
 import { createContext, useContext, useState, ReactNode, useCallback } from 'react';
 import { isConnected, requestAccess, getAddress } from '@stellar/freighter-api';
+import { StrKey, MuxedAccount } from '@stellar/stellar-sdk';
 import { TierType } from '../components/NFTBoxCard';
 import { BillType } from '../components/BillTypeIcon';
 import { CONTRACT_READY } from '../utils/sorobanConfig';
 import * as contractService from '../utils/contractService';
+
+/**
+ * Normalize any Stellar address to a plain G... Ed25519 public key.
+ * Freighter can return muxed (M...) addresses — we extract the base key.
+ * C... addresses from Freighter indicate a muxed key encoded differently;
+ * we guard against those too by falling back to the raw value.
+ */
+function normalizeToGAddress(addr: string): string {
+  if (!addr) return addr;
+  // Muxed account (M...) — extract base G-address
+  if (addr.startsWith('M') && StrKey.isValidMuxedAccount(addr)) {
+    try {
+      const muxed = MuxedAccount.fromAddress(addr, '0');
+      return muxed.baseAccount().accountId();
+    } catch {
+      // fall through
+    }
+  }
+  // Already a valid G-address
+  if (StrKey.isValidEd25519PublicKey(addr)) return addr;
+  // Unknown format — return as-is, let downstream validation catch it
+  return addr;
+}
 
 export type UserRole = 'ofw' | 'family' | 'merchant' | null;
 
@@ -157,10 +181,13 @@ export function AppProvider({ children }: { children: ReactNode }) {
       }
 
       const addressResult = await getAddress();
-      const addr = addressResult.error ? '' : addressResult.address;
+      const rawAddr = addressResult.error ? '' : addressResult.address;
+      const addr = normalizeToGAddress(rawAddr);
 
-      if (!addr) {
-        const msg = 'Could not get address. Open Freighter, log in, and try again.';
+      if (!addr || !StrKey.isValidEd25519PublicKey(addr)) {
+        const msg = rawAddr
+          ? `Unsupported address format returned by Freighter: "${rawAddr}". Please switch to a standard G... account in Freighter.`
+          : 'Could not get address. Open Freighter, log in, and try again.';
         setWalletError(msg);
         throw new Error(msg);
       }
