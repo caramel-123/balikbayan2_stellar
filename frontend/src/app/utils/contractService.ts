@@ -168,9 +168,9 @@ export async function createEscrow(
   const deadline = BigInt(Math.floor(new Date(deadlineDate).getTime() / 1000));
 
   const args = [
-    new Address(walletAddress).toScVal(),
-    new Address(familyAddress).toScVal(),
-    new Address(TOKEN_CONTRACT_ID).toScVal(),
+    Address.fromString(walletAddress).toScVal(),
+    Address.fromString(familyAddress).toScVal(),
+    Address.fromString(TOKEN_CONTRACT_ID).toScVal(),
     nativeToScVal(amount, { type: 'i128' }),
     billTypeToScVal(billType),
     nativeToScVal(deadline, { type: 'u64' }),
@@ -206,7 +206,7 @@ export async function raiseDispute(
 ): Promise<boolean> {
   const args = [
     nativeToScVal(escrowId, { type: 'u32' }),
-    new Address(walletAddress).toScVal(),
+    Address.fromString(walletAddress).toScVal(),
   ];
   const result = await buildAndSubmit(walletAddress, 'raise_dispute', args);
   return result ? Boolean(scValToNative(result)) : false;
@@ -275,7 +275,7 @@ export interface ChainBox {
 
 export async function getBoxCount(walletAddress: string): Promise<number> {
   try {
-    const args = [new Address(walletAddress).toScVal()];
+    const args = [Address.fromString(walletAddress).toScVal()];
     const result = await simulateOnly(walletAddress, 'get_box_count', args);
     return result ? Number(scValToNative(result)) : 0;
   } catch {
@@ -289,7 +289,7 @@ export async function getBox(
 ): Promise<ChainBox | null> {
   try {
     const args = [
-      new Address(walletAddress).toScVal(),
+      Address.fromString(walletAddress).toScVal(),
       nativeToScVal(boxNumber, { type: 'u32' }),
     ];
     const result = await simulateOnly(walletAddress, 'get_box', args);
@@ -312,7 +312,7 @@ export async function getBox(
 
 export async function getTier(walletAddress: string): Promise<string> {
   try {
-    const args = [new Address(walletAddress).toScVal()];
+    const args = [Address.fromString(walletAddress).toScVal()];
     const result = await simulateOnly(walletAddress, 'get_tier', args);
     return result ? String(scValToNative(result)) : 'Common';
   } catch {
