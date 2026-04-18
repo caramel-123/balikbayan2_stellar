@@ -1,4 +1,3 @@
-```markdown
 # BalikBayan
 OFW conditional remittance and NFT legacy platform, built on Stellar.
 
@@ -19,39 +18,42 @@ BalikBayan lets the OFW lock USDC in a Soroban smart contract escrow tagged to a
 ## Architecture
 ```
 Browser (React + Vite + TypeScript)
-  |-- Freighter Wallet API       (signing and wallet connection)
-  |-- @stellar/stellar-sdk       (transaction building, RPC)
-  |-- Anthropic API (Claude)     (AI receipt verification)
-  |-- Convex                     (real-time off-chain state sync)
-  |-- Soroban RPC                (on-chain reads and writes)
+  |-- Freighter Wallet API        (signing and wallet connection)
+  |-- @stellar/stellar-sdk        (transaction building, RPC)
+  |-- Anthropic API               (AI receipt verification via Claude)
+  |-- Soroban RPC                 (on-chain reads and writes)
 
 Stellar Testnet
-  |-- BalikBayan Soroban Contract (escrow logic, NFT minting, tier system)
-  |-- USDC Token Contract         (SEP-41 token)
+  |-- BalikBayan Soroban Contract (escrow + NFT box minting logic)
+  |-- USDC Token Contract         (SEP-41 token, Circle testnet)
 ```
-No backend server. All escrow and NFT state lives on-chain. Convex mirrors it for real-time UI updates and activity logs. Anthropic API handles receipt photo verification off-chain and triggers contract release.
+No backend server. All escrow and NFT state lives on-chain. The Anthropic API is called from a Vercel serverless function to verify receipt photos before releasing funds.
 
 ## Project Structure
 ```
-balikbayan/
+balikbayan2_stellar/
 ├── contract/
 │   └── contracts/
 │       └── hello-world/
 │           ├── src/
-│           │   ├── lib.rs        # Soroban escrow + NFT + tier contract
-│           │   └── test.rs       # 5 contract tests
+│           │   ├── lib.rs          # Soroban escrow + NFT contract
+│           │   └── test.rs         # Contract tests
 │           └── Cargo.toml
-├── BalikBayan_stellar/           # React + Vite frontend
+├── frontend/
+│   ├── api/
+│   │   └── verify-receipt.ts       # Vercel serverless — Anthropic receipt check
 │   ├── src/
-│   │   ├── lib/
-│   │   │   ├── stellar.ts        # Contract invocations, balance reads
-│   │   │   ├── freighter.ts      # Wallet connect and signing
-│   │   │   └── config.ts         # Environment constants
-│   │   ├── views/                # Page-level components
-│   │   ├── components/           # Shared UI components
-│   │   ├── types/                # TypeScript interfaces
-│   │   └── styles/               # Global CSS design system
-│   └── .env                      # Environment variables
+│   │   └── app/
+│   │       ├── context/
+│   │       │   └── AppContext.tsx  # Global state, wallet, escrow actions
+│   │       ├── pages/              # OFWDashboard, FamilyDashboard, SendMoneyWizard
+│   │       ├── components/         # NFTBoxCard, TierBadge, BillTypeIcon, etc.
+│   │       └── utils/
+│   │           ├── contractService.ts  # Contract invocations
+│   │           └── sorobanConfig.ts    # RPC + contract IDs
+│   ├── vercel.json
+│   ├── .env.example
+│   └── package.json
 └── README.md
 ```
 
@@ -59,67 +61,51 @@ balikbayan/
 
 | Feature | Usage |
 |---|---|
-| Soroban smart contracts | Escrow logic — lock, release, refund, dispute, NFT minting, tier system |
-| USDC on Stellar | Stablecoin settlement, no volatility risk during escrow period |
-| Trustlines | Family wallet must trust USDC before receiving funds |
-| Clawback | Anchor can reverse funds during dispute grace period |
-| SEP-24 | Interactive PHP-to-USDC on-ramp via local anchor |
-| SEP-10 | Wallet-based authentication with Stellar anchors |
+| Soroban smart contracts | Escrow logic — lock, release, dispute, refund + NFT box minting |
+| USDC on Stellar | Stablecoin settlement, no XLM volatility for OFW remittances |
+| Stellar SDK | Transaction building, address validation, RPC queries |
+| Freighter Wallet | OFW and family wallet signing on testnet |
+| Soroban RPC | Simulate and submit transactions, read on-chain escrow state |
 
 ## Smart Contract
+
 Deployed on Stellar testnet:
 
 ```
-CACPU3QWS5OKFJCFJMNRBLSIMQOA4G3ZPZYPKQMVPLZ6C76TZI5Y6743
+CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMCTCWSGJQPHGA
 ```
 
-Explorer: https://stellar.expert/explorer/testnet/contract/CACPU3QWS5OKFJCFJMNRBLSIMQOA4G3ZPZYPKQMVPLZ6C76TZI5Y6743
+> Explorer: https://stellar.expert/explorer/testnet/contract/CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMCTCWSGJQPHGA
 
-## Contract Functions
+### Contract Functions
 
 | Function | Caller | Description |
 |---|---|---|
-| `create_escrow(ofw, family, token, amount, bill_type, deadline)` | OFW | Locks USDC, returns escrow ID |
-| `confirm_payment(escrow_id)` | Family | Releases USDC to family wallet and mints BalikBayan Box NFT |
-| `claim_refund(escrow_id)` | OFW | Refunds USDC after deadline passes unfulfilled |
+| `create_escrow(ofw, family, token, amount, bill_type, deadline)` | OFW | Locks USDC in escrow, returns escrow ID |
+| `confirm_payment(escrow_id)` | Family | Releases USDC to family wallet, mints BalikBayan Box NFT |
+| `claim_refund(escrow_id)` | OFW | Returns USDC to OFW after deadline expires |
 | `raise_dispute(escrow_id, caller)` | OFW or Family | Freezes escrow for arbitration |
 | `get_escrow(escrow_id)` | Anyone | Read-only escrow state |
-| `get_box_count(ofw)` | Anyone | Returns total NFT boxes collected by OFW |
-| `get_box(ofw, box_number)` | Anyone | Returns specific BalikBayan Box NFT metadata |
-| `get_tier(ofw)` | Anyone | Returns current tier: Common / Silver / Gold / Diamond / Legend |
+| `get_box_count(ofw)` | Anyone | Total NFT boxes minted for an OFW |
+| `get_box(ofw, box_number)` | Anyone | Read individual BalikBayan Box metadata |
+| `get_tier(ofw)` | Anyone | OFW tier based on box count |
 
-## Escrow Status Lifecycle
-
+### Escrow Status Lifecycle
 ```
-Created --> Fulfilled  (family calls confirm_payment — USDC released, NFT minted)
-        --> Expired    (OFW calls claim_refund after deadline)
-        --> Disputed   (either party calls raise_dispute — funds frozen)
+Active --> Fulfilled  (family calls confirm_payment → NFT mints)
+       --> Expired    (OFW calls claim_refund after deadline)
+       --> Disputed   (either party calls raise_dispute)
 ```
 
-## NFT Tier System
+### NFT Tier System
 
-| Tier | Boxes Required | Key Perk |
-|---|---|---|
-| Common | 1 to 4 | Building remittance history |
-| Silver | 5 to 11 | 5% discount at partner pharmacies |
-| Gold | 12 to 23 | 10% discount at SM and Robinsons, free family insurance |
-| Diamond | 24 to 59 | 15% hospital discount, OWWA priority processing |
-| Legend | 60 and above | PAG-IBIG housing loan priority, physical balikbayan box shipped home |
-
-## Supported Bill Types
-
-| Bill Type | Provider Examples |
+| Tier | Boxes Required |
 |---|---|
-| Tuition | Any school — UST, PUP, DLSU, UP, Ateneo |
-| Electricity | Meralco, VECO, CEPALCO |
-| Water | Maynilad, Manila Water |
-| Internet and Cable | PLDT, Globe, Converge, Sky |
-| Medical | Any hospital or clinic |
-| Rent | Any landlord wallet |
-| Grocery | Supermarkets and palengke |
-| Medicine | Pharmacies |
-| Savings | Any bank or GCash savings goal |
-| Custom | OFW-defined condition |
+| Common | 0–4 |
+| Silver | 5–14 |
+| Gold | 15–29 |
+| Diamond | 30–49 |
+| Legend | 50+ |
 
 ## Prerequisites
 
@@ -137,139 +123,78 @@ Created --> Fulfilled  (family calls confirm_payment — USDC released, NFT mint
 
 ### Smart Contract
 ```bash
-# Navigate to contract
-cd contract/contracts/hello-world
+# Build
+soroban contract build
 
-# Run tests
+# Test
 cargo test
 
-# Build
-cargo build --target wasm32v1-none --release
-
-# Generate and fund key
-stellar keys generate --global my-key --network testnet
-stellar keys fund my-key --network testnet
-
 # Deploy to testnet
-stellar contract deploy \
-  --wasm ../../target/wasm32v1-none/release/hello_world.wasm \
-  --source my-key \
+soroban keys generate --global deployer --network testnet
+soroban contract deploy \
+  --wasm target/wasm32-unknown-unknown/release/hello_world.wasm \
+  --source deployer \
   --network testnet
 ```
 
 ### Frontend
 ```bash
-cd BalikBayan_stellar
+cd frontend
 npm install
 npm run dev
 ```
-<img width="1248" height="694" alt="Screenshot 2026-04-18 at 1 50 09 PM" src="https://github.com/user-attachments/assets/71a0d5bd-f492-400f-8f32-bba828842e83" />
-<img width="1239" height="718" alt="Screenshot 2026-04-18 at 1 50 23 PM" src="https://github.com/user-attachments/assets/b09fa6ae-73d9-4f1a-93ca-173804d8fe47" />
-<img width="1251" height="732" alt="Screenshot 2026-04-18 at 1 50 52 PM" src="https://github.com/user-attachments/assets/581048db-ba30-4076-bdae-c5a45dbd4167" />
-<img width="812" height="644" alt="Screenshot 2026-04-18 at 1 51 28 PM" src="https://github.com/user-attachments/assets/4e1fbf5d-fcd1-4f26-aa88-e4663bf6f7d6" />
-<img width="813" height="590" alt="Screenshot 2026-04-18 at 1 51 46 PM" src="https://github.com/user-attachments/assets/0505d144-4d63-423e-86b9-23ce8019b292" />
-<img width="402" height="601" alt="Screenshot 2026-04-18 at 1 52 32 PM" src="https://github.com/user-attachments/assets/bd675386-f156-46ea-8dbd-9443d2055716" />
-<img width="553" height="607" alt="Screenshot 2026-04-18 at 1 52 46 PM" src="https://github.com/user-attachments/assets/92c9f3ed-7a5b-4c79-87fa-3c4ad41730e7" />
-<img width="466" height="316" alt="Screenshot 2026-04-18 at 1 53 04 PM" src="https://github.com/user-attachments/assets/8118afc0-b71c-4ceb-b620-e16e995c6cc4" />
-<img width="902" height="605" alt="Screenshot 2026-04-18 at 1 53 19 PM" src="https://github.com/user-attachments/assets/f2cb14e0-0d23-4877-984c-9243329f121f" />
-<img width="478" height="518" alt="Screenshot 2026-04-18 at 1 53 44 PM" src="https://github.com/user-attachments/assets/92109cbf-9aba-4826-aa01-269d8d18ae44" />
 
+The app runs at http://localhost:5173.
 
-
-
-
-
-
-App runs at https://balikbayan-26xp25x1q-caramel-123s-projects.vercel.app/
-
-### Environment Variables (.env)
+**Environment variables (`.env`):**
 ```
-VITE_CONTRACT_ID=CACPU3QWS5OKFJCFJMNRBLSIMQOA4G3ZPZYPKQMVPLZ6C76TZI5Y6743
-VITE_USDC_CONTRACT_ID=<testnet USDC contract ID>
-VITE_NETWORK=testnet
-VITE_STELLAR_RPC_URL=https://soroban-testnet.stellar.org
-VITE_ANTHROPIC_API_KEY=<your Anthropic API key>
+VITE_SOROBAN_RPC_URL=https://soroban-testnet.stellar.org
+VITE_CONTRACT_ID=<deployed contract ID>
+VITE_TOKEN_CONTRACT_ID=CBIELTK6YBZJU5UP2WWQEUCYKLPU6AUNZ2BQ4WWFEIE3USCIHMXQDAMA
+ANTHROPIC_API_KEY=<your Anthropic API key>
 ```
 
 ## Sample CLI Invocations
 
 ```bash
-# Create escrow: OFW locks USDC for Meralco bill
-stellar contract invoke \
-  --id CACPU3QWS5OKFJCFJMNRBLSIMQOA4G3ZPZYPKQMVPLZ6C76TZI5Y6743 \
-  --source my-key \
+# Create escrow: OFW locks USDC for family, tagged as tuition
+soroban contract invoke \
+  --id CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMCTCWSGJQPHGA \
+  --source ofw \
   --network testnet \
   -- create_escrow \
   --ofw <OFW_ADDRESS> \
   --family <FAMILY_ADDRESS> \
-  --token <USDC_CONTRACT_ADDRESS> \
-  --amount 385000000 \
-  --bill_type '{"Electricity": null}' \
-  --deadline 1745500000
+  --token CBIELTK6YBZJU5UP2WWQEUCYKLPU6AUNZ2BQ4WWFEIE3USCIHMXQDAMA \
+  --amount 357142857 \
+  --bill_type '{"Tuition": []}' \
+  --deadline 1717200000
 
-# Confirm payment (family submits proof, releases USDC, mints NFT box)
-stellar contract invoke \
-  --id CACPU3QWS5OKFJCFJMNRBLSIMQOA4G3ZPZYPKQMVPLZ6C76TZI5Y6743 \
-  --source family-key \
+# Family confirms payment (releases USDC + mints NFT box)
+soroban contract invoke \
+  --id CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMCTCWSGJQPHGA \
+  --source family \
   --network testnet \
   -- confirm_payment \
   --escrow_id 1
 
-# Claim refund after deadline
-stellar contract invoke \
-  --id CACPU3QWS5OKFJCFJMNRBLSIMQOA4G3ZPZYPKQMVPLZ6C76TZI5Y6743 \
-  --source my-key \
-  --network testnet \
-  -- claim_refund \
-  --escrow_id 1
-
-# Raise dispute
-stellar contract invoke \
-  --id CACPU3QWS5OKFJCFJMNRBLSIMQOA4G3ZPZYPKQMVPLZ6C76TZI5Y6743 \
-  --source my-key \
-  --network testnet \
-  -- raise_dispute \
-  --escrow_id 1 \
-  --caller <OFW_ADDRESS>
-
 # Check escrow state
-stellar contract invoke \
-  --id CACPU3QWS5OKFJCFJMNRBLSIMQOA4G3ZPZYPKQMVPLZ6C76TZI5Y6743 \
+soroban contract invoke \
+  --id CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMCTCWSGJQPHGA \
   --network testnet \
   -- get_escrow \
   --escrow_id 1
 
 # Check OFW tier
-stellar contract invoke \
-  --id CACPU3QWS5OKFJCFJMNRBLSIMQOA4G3ZPZYPKQMVPLZ6C76TZI5Y6743 \
+soroban contract invoke \
+  --id CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMCTCWSGJQPHGA \
   --network testnet \
   -- get_tier \
   --ofw <OFW_ADDRESS>
-
-# Check box count
-stellar contract invoke \
-  --id CACPU3QWS5OKFJCFJMNRBLSIMQOA4G3ZPZYPKQMVPLZ6C76TZI5Y6743 \
-  --network testnet \
-  -- get_box_count \
-  --ofw <OFW_ADDRESS>
 ```
-<img width="1251" height="742" alt="Screenshot 2026-04-18 at 1 49 45 PM" src="https://github.com/user-attachments/assets/18037635-2807-4d07-ad5b-5dc3c02d4c9e" />
-
 
 ## Target Users
-Filipino Overseas Workers earning PHP 30,000 to 150,000 per month abroad who regularly send money home for essential household expenses. They lose hundreds of pesos per transaction in bank fees, have zero visibility on how funds are used, and have no verifiable proof of their financial consistency to show institutions. Every peso saved on fees is a bill that gets paid. Every box minted is a sacrifice that gets remembered.
+Filipino OFWs (10 million strong) sending PHP 1.6 trillion home annually — working in Saudi Arabia, UAE, Hong Kong, Singapore, and beyond. They earn PHP 40,000–120,000/month abroad and send 60–80% home. They have no way to earmark funds, no proof of their remittance history for loan applications, and receive zero recognition for years of sacrifice. BalikBayan gives them control, proof, and rewards — all in one wallet.
 
 ## Why Stellar
-No other chain gives sub-cent fees with native USDC support and built-in compliance controls that anchors and regulators care about. Stellar's speed of 3 to 5 second finality and cost of less than PHP 1 per transaction makes this directly competitive against bank wire and GCash alternatives. The escrow contract is composable — it can be reused for any conditional payment use case beyond OFW remittance.
-
-## About
-Built for the Stellar Philippines UniTour Bootcamp 2026.
-
-## Contributors
-- Melfred Bernabe — Polytechnic University of the Philippines — BS Computer Science
-
-## Languages
-- Rust — Smart Contract
-- TypeScript — Frontend
-- CSS — Styling
-```
+No other chain gives sub-cent fees with native USDC support at the speed OFW remittances demand. Stellar's 3–5 second finality and sub-PHP-1 fees make this directly competitive against Remitly, Western Union, and GCash padala. The escrow contract is composable — the same pattern works for any conditional payment use case beyond remittances.
