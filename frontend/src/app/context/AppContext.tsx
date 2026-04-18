@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, ReactNode, useCallback } from 'react';
-import { isConnected, isAllowed, requestAccess, getAddress } from '@stellar/freighter-api';
+import { isConnected, requestAccess, getAddress } from '@stellar/freighter-api';
 import { TierType } from '../components/NFTBoxCard';
 import { BillType } from '../components/BillTypeIcon';
 import { CONTRACT_READY } from '../utils/sorobanConfig';
@@ -147,19 +147,20 @@ export function AppProvider({ children }: { children: ReactNode }) {
         setWalletError(msg);
         throw new Error(msg);
       }
-      const allowed = await isAllowed();
-      if (!allowed) {
-        await requestAccess();
-      }
-      const addressResult = await getAddress();
-      if (addressResult.error) {
-        const msg = addressResult.error.message ?? 'Failed to get wallet address.';
+
+      // Always call requestAccess — opens Freighter popup if needed, returns address
+      const accessResult = await requestAccess();
+      if (accessResult.error) {
+        const msg = accessResult.error.message ?? 'Access denied by Freighter.';
         setWalletError(msg);
         throw new Error(msg);
       }
-      const addr = addressResult.address;
+
+      const addressResult = await getAddress();
+      const addr = addressResult.error ? '' : addressResult.address;
+
       if (!addr) {
-        const msg = 'No address returned from Freighter. Make sure you are logged in.';
+        const msg = 'Could not get address. Open Freighter, log in, and try again.';
         setWalletError(msg);
         throw new Error(msg);
       }
