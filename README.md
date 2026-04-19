@@ -1,4 +1,4 @@
-<img width="1200" height="1700" alt="image" src="https://github.com/user-attachments/assets/49443615-7038-4028-8387-f6c35bb52384" />
+
 # BalikBayan
 OFW conditional remittance and NFT legacy platform, built on Stellar.
 
@@ -16,7 +16,7 @@ BalikBayan lets the OFW lock USDC in a Soroban smart contract escrow tagged to a
 5. AI verifies receipt — USDC releases to family wallet instantly
 6. BalikBayan Box NFT mints — tier updates in OFW dashboard
 
-**## 1. OFW (Sender)**
+## Demo Flow (2 minutes)
 <img width="1114" height="722" alt="Screenshot 2026-04-19 at 7 49 49 AM" src="https://github.com/user-attachments/assets/d3c1cc58-c76c-47d6-a26f-757625f5f840" />
 <img width="1119" height="732" alt="Screenshot 2026-04-19 at 7 50 25 AM" src="https://github.com/user-attachments/assets/4dfd3af8-5924-46c7-937f-ca11e479ce95" />
 <img width="1117" height="722" alt="Screenshot 2026-04-19 at 7 50 43 AM" src="https://github.com/user-attachments/assets/0f9cfe1e-9c89-4184-8d01-b29771eebbb7" />
