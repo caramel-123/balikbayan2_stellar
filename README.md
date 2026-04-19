@@ -54,6 +54,8 @@ BalikBayan lets the OFW lock USDC in a Soroban smart contract escrow tagged to a
 ## 3. OFW POV (paid)
 <img width="1439" height="675" alt="Screenshot 2026-04-19 at 8 18 34 AM" src="https://github.com/user-attachments/assets/8afc31ce-0fd5-440d-adb4-77fe518cf80a" />
 
+<img width="1443" height="733" alt="Screenshot 2026-04-19 at 8 39 16 AM" src="https://github.com/user-attachments/assets/a3d0bec4-2e1a-4bba-846e-97691813e77a" />
+
 
 ## Architecture
 ```
