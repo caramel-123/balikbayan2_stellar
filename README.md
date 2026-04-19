@@ -16,6 +16,7 @@ BalikBayan lets the OFW lock USDC in a Soroban smart contract escrow tagged to a
 5. AI verifies receipt — USDC releases to family wallet instantly
 6. BalikBayan Box NFT mints — tier updates in OFW dashboard
 
+1. OFW (Sender)
 <img width="1114" height="722" alt="Screenshot 2026-04-19 at 7 49 49 AM" src="https://github.com/user-attachments/assets/d3c1cc58-c76c-47d6-a26f-757625f5f840" />
 <img width="1119" height="732" alt="Screenshot 2026-04-19 at 7 50 25 AM" src="https://github.com/user-attachments/assets/4dfd3af8-5924-46c7-937f-ca11e479ce95" />
 <img width="1117" height="722" alt="Screenshot 2026-04-19 at 7 50 43 AM" src="https://github.com/user-attachments/assets/0f9cfe1e-9c89-4184-8d01-b29771eebbb7" />
@@ -25,10 +26,18 @@ BalikBayan lets the OFW lock USDC in a Soroban smart contract escrow tagged to a
 <img width="1119" height="735" alt="Screenshot 2026-04-19 at 7 53 38 AM" src="https://github.com/user-attachments/assets/e3d0bcf8-e666-4fd3-8d61-af231d7ad42d" />
 <img width="1117" height="714" alt="Screenshot 2026-04-19 at 7 53 53 AM" src="https://github.com/user-attachments/assets/0687526e-d1a7-49a9-adfa-20c9e8955dda" />
 <img width="1118" height="724" alt="Screenshot 2026-04-19 at 7 54 12 AM" src="https://github.com/user-attachments/assets/138b369d-6da8-4e81-bb23-287ae1791064" />
+<img width="1437" height="730" alt="Screenshot 2026-04-19 at 8 11 52 AM" src="https://github.com/user-attachments/assets/fb50b868-ef55-46a3-9c29-d4ad3fe14018" />
 
-<img width="1244" height="724" alt="Screenshot 2026-04-19 at 8 02 21 AM" src="https://github.com/user-attachments/assets/644b193a-40c7-4453-83ae-3292f9dbfda5" />
+2. Family (Receiver)
+<img width="1443" height="574" alt="Screenshot 2026-04-19 at 8 12 34 AM" src="https://github.com/user-attachments/assets/82e44887-a472-437e-90b4-1a177a0d94c0" />
+<img width="1437" height="725" alt="Screenshot 2026-04-19 at 8 12 52 AM" src="https://github.com/user-attachments/assets/ae1d7a4b-a2d8-46e2-b1a5-8e283d797e5a" />
+<img width="1438" height="723" alt="Screenshot 2026-04-19 at 8 14 46 AM" src="https://github.com/user-attachments/assets/86b5be86-1558-4981-b221-13678fd449f5" />
+<img width="1436" height="723" alt="Screenshot 2026-04-19 at 8 15 21 AM" src="https://github.com/user-attachments/assets/d435eae8-4a79-4786-b68a-9495118f1c19" />
+<img width="1339" height="719" alt="Screenshot 2026-04-19 at 8 17 45 AM" src="https://github.com/user-attachments/assets/c4fc57c3-374f-45f9-b0f9-c77f72b5bc22" />
+<img width="1441" height="727" alt="Screenshot 2026-04-19 at 8 18 12 AM" src="https://github.com/user-attachments/assets/f00bd32d-df2a-40eb-a568-02b74698c131" />
 
-
+3. OFW (Sender) (Tuition Fee Paid)
+<img width="1439" height="675" alt="Screenshot 2026-04-19 at 8 18 34 AM" src="https://github.com/user-attachments/assets/8afc31ce-0fd5-440d-adb4-77fe518cf80a" />
 
 
 ## Architecture
@@ -93,6 +102,9 @@ CDTZLW3TJCJDFJYJST7W74HSI5T57O5WW7XYMTRRWJIGRQSG4U5PMXLP
 
 > Explorer: [https://stellar.expert/explorer/testnet/contract/CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMCTCWSGJQPHGA
 ](https://stellar.expert/explorer/testnet/contract/CDTZLW3TJCJDFJYJST7W74HSI5T57O5WW7XYMTRRWJIGRQSG4U5PMXLP)
+
+<img width="1244" height="724" alt="Screenshot 2026-04-19 at 8 02 21 AM" src="https://github.com/user-attachments/assets/644b193a-40c7-4453-83ae-3292f9dbfda5" />
+
 ### Contract Functions
 
 | Function | Caller | Description |
