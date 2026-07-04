@@ -1,5 +1,8 @@
 import {
+  Asset,
   Contract,
+  Horizon,
+  Operation,
   TransactionBuilder,
   BASE_FEE,
   rpc as SorobanRpc,
@@ -9,7 +12,7 @@ import {
   scValToNative,
 } from '@stellar/stellar-sdk';
 import { signTransaction } from '@stellar/freighter-api';
-import { CONTRACT_ID, NETWORK_PASSPHRASE, RPC_URL, TOKEN_CONTRACT_ID } from './sorobanConfig';
+import { CONTRACT_ID, HORIZON_URL, NETWORK_PASSPHRASE, RPC_URL, TOKEN_CONTRACT_ID } from './sorobanConfig';
 
 // Build ScVal for any Stellar address (G... account or C... contract)
 function addressToScVal(address: string): xdr.ScVal {
@@ -31,6 +34,7 @@ function addressToScVal(address: string): xdr.ScVal {
 }
 
 const server = new SorobanRpc.Server(RPC_URL);
+const horizon = new Horizon.Server(HORIZON_URL);
 
 // PHP to USDC conversion (7 decimal places on Stellar)
 const PHP_TO_USD = 56;
@@ -133,12 +137,13 @@ async function buildAndSubmit(
   throw new Error(`Transaction failed: ${getResult.status}`);
 }
 
-async function simulateOnly(
+async function simulateOnContract(
+  contractId: string,
   walletAddress: string,
   method: string,
   args: xdr.ScVal[]
 ): Promise<xdr.ScVal | null> {
-  const contract = new Contract(CONTRACT_ID);
+  const contract = new Contract(contractId);
   const account = await server.getAccount(walletAddress);
 
   const tx = new TransactionBuilder(account, {
@@ -157,6 +162,74 @@ async function simulateOnly(
 
   const success = simResult as SorobanRpc.Api.SimulateTransactionSuccessResponse;
   return success.result?.retval ?? null;
+}
+
+function simulateOnly(
+  walletAddress: string,
+  method: string,
+  args: xdr.ScVal[]
+): Promise<xdr.ScVal | null> {
+  return simulateOnContract(CONTRACT_ID, walletAddress, method, args);
+}
+
+// ── Trustlines ────────────────────────────────────────────────────────────────
+// The USDC token contract is a Stellar Asset Contract wrapping a classic
+// Stellar asset. Classic assets require the sending/receiving account to hold
+// a trustline to the issuer before any transfer will succeed, unlike native
+// Soroban tokens. We detect this by asking the SAC for its `name()`, which
+// returns "<code>:<issuer>" for classic-asset-backed tokens.
+
+let cachedTokenAsset: Asset | null | undefined;
+
+async function getTokenAsset(walletAddress: string): Promise<Asset | null> {
+  if (cachedTokenAsset !== undefined) return cachedTokenAsset;
+
+  const result = await simulateOnContract(TOKEN_CONTRACT_ID, walletAddress, 'name', []);
+  const name = result ? String(scValToNative(result)) : '';
+  const [code, issuer] = name.split(':');
+
+  cachedTokenAsset = code && issuer ? new Asset(code, issuer) : null;
+  return cachedTokenAsset;
+}
+
+async function hasTrustline(walletAddress: string, asset: Asset): Promise<boolean> {
+  const account = await horizon.loadAccount(walletAddress);
+  return account.balances.some((b) => {
+    const line = b as unknown as { asset_code?: string; asset_issuer?: string };
+    return line.asset_code === asset.getCode() && line.asset_issuer === asset.getIssuer();
+  });
+}
+
+// Ensures the wallet holds a trustline for the escrow token, prompting the
+// user to sign a one-time ChangeTrust operation if it's missing. Returns
+// true if a trustline was created, false if one already existed (or the
+// token isn't a classic asset and doesn't need one).
+export async function ensureTrustline(walletAddress: string): Promise<boolean> {
+  const asset = await getTokenAsset(walletAddress);
+  if (!asset) return false;
+
+  if (await hasTrustline(walletAddress, asset)) return false;
+
+  const account = await horizon.loadAccount(walletAddress);
+  const tx = new TransactionBuilder(account, {
+    fee: BASE_FEE,
+    networkPassphrase: NETWORK_PASSPHRASE,
+  })
+    .addOperation(Operation.changeTrust({ asset }))
+    .setTimeout(30)
+    .build();
+
+  const signResult = await signTransaction(tx.toXDR(), {
+    networkPassphrase: NETWORK_PASSPHRASE,
+  });
+
+  if ('error' in signResult) {
+    throw new Error((signResult.error as Error).message ?? 'Trustline signing rejected');
+  }
+
+  const signedTx = TransactionBuilder.fromXDR(signResult.signedTxXdr, NETWORK_PASSPHRASE);
+  await horizon.submitTransaction(signedTx);
+  return true;
 }
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -191,6 +264,8 @@ export async function createEscrow(
   assertAddress(walletAddress, 'Wallet');
   assertAddress(familyAddress, 'Recipient');
   assertAddress(TOKEN_CONTRACT_ID, 'Token');
+
+  await ensureTrustline(walletAddress);
 
   const amount = phpToTokenUnits(amountPhp);
   const deadline = BigInt(Math.floor(new Date(deadlineDate).getTime() / 1000));
