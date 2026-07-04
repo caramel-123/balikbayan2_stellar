@@ -1,4 +1,4 @@
-import { Package, User, Bell, ChevronDown } from 'lucide-react';
+import { Package, User, Bell, ChevronDown, Globe } from 'lucide-react';
 import { Button } from './Button';
 import { useApp } from '../context/AppContext';
 import { useState } from 'react';
@@ -64,6 +64,18 @@ export function Navbar() {
             )}
 
             <div className="flex items-center gap-4">
+              {walletConnected && (
+                <a
+                  href={`https://stellar.expert/explorer/testnet/account/${walletAddress}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  title="View on Stellar Expert"
+                  className="p-2 hover:bg-[#F0F6FF] rounded-lg transition-colors"
+                >
+                  <Globe size={20} className="text-[#64748B]" />
+                </a>
+              )}
+
               {walletConnected && (
                 <button className="p-2 hover:bg-[#F0F6FF] rounded-lg transition-colors relative">
                   <Bell size={20} className="text-[#64748B]" />
