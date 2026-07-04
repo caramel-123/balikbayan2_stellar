@@ -36,7 +36,7 @@ function addressToScVal(address: string): xdr.ScVal {
 const server = new SorobanRpc.Server(RPC_URL);
 const horizon = new Horizon.Server(HORIZON_URL);
 
-// PHP to USDC conversion (7 decimal places on Stellar)
+// PHP to XLM conversion (7 decimal places on Stellar; fixed demo rate)
 const PHP_TO_USD = 56;
 const TOKEN_DECIMALS = 10_000_000n;
 
@@ -173,11 +173,12 @@ function simulateOnly(
 }
 
 // ── Trustlines ────────────────────────────────────────────────────────────────
-// The USDC token contract is a Stellar Asset Contract wrapping a classic
-// Stellar asset. Classic assets require the sending/receiving account to hold
-// a trustline to the issuer before any transfer will succeed, unlike native
-// Soroban tokens. We detect this by asking the SAC for its `name()`, which
-// returns "<code>:<issuer>" for classic-asset-backed tokens.
+// The escrow token (TOKEN_CONTRACT_ID) may be a Stellar Asset Contract
+// wrapping a classic Stellar asset (e.g. USDC) or the native XLM SAC. Classic
+// assets require the sending/receiving account to hold a trustline to the
+// issuer before any transfer will succeed; native XLM never does. We detect
+// which case applies by asking the SAC for its `name()`, which returns
+// "<code>:<issuer>" for classic-asset-backed tokens and "native" for XLM.
 
 let cachedTokenAsset: Asset | null | undefined;
 

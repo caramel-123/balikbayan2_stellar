@@ -16,8 +16,8 @@ interface SendMoneyData {
   deadline: string;
 }
 
-// SEP-24 anchor for PHP → USDC on-ramp (MoneyGram / SDF testnet demo)
-const ONRAMP_ANCHOR = 'https://testanchor.stellar.org';
+// Stellar testnet Friendbot funds accounts with XLM directly — no anchor or trustline needed
+const FRIENDBOT_URL = 'https://friendbot.stellar.org';
 
 export function SendMoneyWizard({ onNavigate }: { onNavigate: (page: string) => void }) {
   const [step, setStep] = useState(1);
@@ -114,17 +114,17 @@ export function SendMoneyWizard({ onNavigate }: { onNavigate: (page: string) => 
               <Wallet size={24} className="text-white" />
             </div>
             <div>
-              <h2 className="text-2xl font-bold text-[#1E293B]">Add USDC to Your Wallet</h2>
-              <p className="text-[#64748B]">Powered by Stellar Anchor Protocol (SEP-24)</p>
+              <h2 className="text-2xl font-bold text-[#1E293B]">Fund Your Wallet with XLM</h2>
+              <p className="text-[#64748B]">Powered by Stellar Testnet Friendbot</p>
             </div>
           </div>
 
           <div className="bg-[#F0F6FF] rounded-lg p-4 space-y-2">
             <p className="text-sm font-semibold text-[#1A3A5C]">How it works</p>
             <ol className="text-sm text-[#64748B] space-y-1 list-decimal list-inside">
-              <li>Click "Go to Anchor" below</li>
-              <li>Deposit PHP via GCash, Maya, or bank transfer</li>
-              <li>Receive USDC in your Freighter wallet</li>
+              <li>Click "Fund with Friendbot" below</li>
+              <li>Testnet Friendbot sends free XLM directly to your address</li>
+              <li>No trustline needed — every Stellar account can hold XLM</li>
               <li>Come back and send your promise</li>
             </ol>
           </div>
@@ -136,7 +136,7 @@ export function SendMoneyWizard({ onNavigate }: { onNavigate: (page: string) => 
             </div>
             <div className="flex justify-between text-sm">
               <span className="text-[#64748B]">Rate</span>
-              <span className="font-semibold text-[#1E293B]">₱56 ≈ 1 USDC</span>
+              <span className="font-semibold text-[#1E293B]">₱56 ≈ 1 XLM (demo rate)</span>
             </div>
             <div className="flex justify-between text-sm">
               <span className="text-[#64748B]">Fee</span>
@@ -147,18 +147,18 @@ export function SendMoneyWizard({ onNavigate }: { onNavigate: (page: string) => 
           <div className="space-y-3">
             <Button
               className="w-full"
-              onClick={() => window.open(`${ONRAMP_ANCHOR}/sep24/transactions/deposit/interactive?asset_code=USDC&account=${walletAddress}`, '_blank')}
+              onClick={() => window.open(`${FRIENDBOT_URL}/?addr=${encodeURIComponent(walletAddress)}`, '_blank')}
             >
               <ExternalLink size={16} className="mr-2" />
-              Go to Anchor (Deposit PHP → USDC)
+              Fund with Friendbot
             </Button>
             <Button variant="secondary" className="w-full" onClick={() => setShowOnRamp(false)}>
-              I already have USDC
+              I already have XLM
             </Button>
           </div>
 
           <p className="text-xs text-center text-[#64748B]">
-            Using Stellar testnet anchor. For mainnet, connect a licensed PHP anchor like Coins.ph.
+            Testnet only. On mainnet, connect a licensed PHP on/off-ramp like Coins.ph instead.
           </p>
         </div>
       </div>
@@ -208,7 +208,7 @@ export function SendMoneyWizard({ onNavigate }: { onNavigate: (page: string) => 
             onClick={() => setShowOnRamp(true)}
             className="text-sm text-[#2563A0] hover:underline flex items-center gap-1"
           >
-            <Wallet size={14} /> Need USDC?
+            <Wallet size={14} /> Need XLM?
           </button>
         </div>
 
@@ -277,7 +277,7 @@ export function SendMoneyWizard({ onNavigate }: { onNavigate: (page: string) => 
               />
               {formData.amount && (
                 <p className="text-sm text-[#64748B]">
-                  ≈ {(parseFloat(formData.amount) / 56).toFixed(2)} USDC
+                  ≈ {(parseFloat(formData.amount) / 56).toFixed(2)} XLM
                 </p>
               )}
               <p className="text-sm text-[#22C55E]">Fee: less than ₱1</p>
@@ -388,8 +388,8 @@ export function SendMoneyWizard({ onNavigate }: { onNavigate: (page: string) => 
                 <span className="font-mono font-semibold text-[#1E293B]">₱{parseFloat(formData.amount || '0').toLocaleString()}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-[#64748B]">USDC equivalent</span>
-                <span className="font-mono font-semibold text-[#1E293B]">{(parseFloat(formData.amount || '0') / 56).toFixed(2)} USDC</span>
+                <span className="text-[#64748B]">XLM equivalent</span>
+                <span className="font-mono font-semibold text-[#1E293B]">{(parseFloat(formData.amount || '0') / 56).toFixed(2)} XLM</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-[#64748B]">Bill Type</span>
