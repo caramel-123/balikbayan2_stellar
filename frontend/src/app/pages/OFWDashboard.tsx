@@ -118,7 +118,7 @@ export function OFWDashboard({ onNavigate }: { onNavigate: (page: string) => voi
             <div className="flex items-center gap-2">
               <div className="flex-1 bg-[#E2E8F0] rounded-full h-2">
                 <div
-                  className="bg-[#2563A0] h-2 rounded-full transition-all"
+                  className="bg-[#1591DC] h-2 rounded-full transition-all"
                   style={{ width: `${nextTierBoxes > 0 ? ((5 - nextTierBoxes) / 5) * 100 : 100}%` }}
                 ></div>
               </div>
@@ -212,7 +212,7 @@ export function OFWDashboard({ onNavigate }: { onNavigate: (page: string) => voi
                 <div className={`w-2 h-2 rounded-full mt-2 ${
                   promise.status === 'fulfilled' ? 'bg-[#22C55E]' :
                   promise.status === 'locked' ? 'bg-[#F59E0B]' :
-                  'bg-[#60A5FA]'
+                  'bg-[#4BB8FA]'
                 }`}></div>
                 <div className="flex-1">
                   <p className="text-[#1E293B]">
@@ -236,7 +236,7 @@ export function OFWDashboard({ onNavigate }: { onNavigate: (page: string) => voi
 
     {selectedPromise && (
       <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4" onClick={() => setSelectedPromise(null)}>
-        <div className="bg-white rounded-lg max-w-2xl w-full p-8 max-h-[90vh] overflow-y-auto animate-in fade-in zoom-in duration-200" onClick={(e) => e.stopPropagation()}>
+        <div className="bg-white rounded-2xl max-w-2xl w-full p-8 max-h-[90vh] overflow-y-auto animate-in fade-in zoom-in duration-200" onClick={(e) => e.stopPropagation()}>
           <div className="flex justify-between items-start mb-6">
             <div className="flex items-center gap-3">
               <BillTypeIcon type={selectedPromise.billType} size={32} />
@@ -251,7 +251,7 @@ export function OFWDashboard({ onNavigate }: { onNavigate: (page: string) => voi
           </div>
 
           <div className="space-y-6">
-            <div className="bg-[#F0F6FF] rounded-lg p-6 space-y-4">
+            <div className="bg-[#EFF6FF] rounded-2xl p-6 space-y-4">
               <div className="flex justify-between items-center">
                 <span className="text-[#64748B]">Amount</span>
                 <span className="text-3xl font-mono font-bold text-[#1E293B]">₱{selectedPromise.amount.toLocaleString()}</span>
@@ -283,11 +283,11 @@ export function OFWDashboard({ onNavigate }: { onNavigate: (page: string) => voi
 
             <div>
               <p className="text-sm text-[#64748B] mb-2">Recipient Wallet Address</p>
-              <div className="flex items-center gap-2 bg-[#F0F6FF] p-3 rounded-lg">
+              <div className="flex items-center gap-2 bg-[#EFF6FF] p-3 rounded-2xl">
                 <p className="font-mono text-sm text-[#1E293B] flex-1 truncate">{selectedPromise.recipientAddress}</p>
                 <button
                   onClick={() => handleCopyAddress(selectedPromise.recipientAddress)}
-                  className="text-[#2563A0] hover:text-[#1A3A5C]"
+                  className="text-[#1591DC] hover:text-[#2C5EAD]"
                 >
                   <Copy size={16} />
                 </button>
@@ -297,7 +297,7 @@ export function OFWDashboard({ onNavigate }: { onNavigate: (page: string) => voi
             {Object.keys(selectedPromise.billDetails).length > 0 && (
               <div>
                 <p className="text-sm text-[#64748B] mb-2">Bill Details</p>
-                <div className="bg-[#F0F6FF] p-4 rounded-lg space-y-2">
+                <div className="bg-[#EFF6FF] p-4 rounded-2xl space-y-2">
                   {Object.entries(selectedPromise.billDetails).map(([key, value]) => (
                     <div key={key} className="flex justify-between">
                       <span className="text-[#64748B] capitalize">{key}</span>
@@ -311,7 +311,7 @@ export function OFWDashboard({ onNavigate }: { onNavigate: (page: string) => voi
             {selectedPromise.status === 'pending' && selectedPromise.proofImage && (
               <div>
                 <p className="text-sm text-[#64748B] mb-2">Submitted Proof</p>
-                <div className="bg-[#F0F6FF] p-4 rounded-lg">
+                <div className="bg-[#EFF6FF] p-4 rounded-2xl">
                   <p className="text-sm text-[#1E293B]">Receipt image has been submitted and is being verified.</p>
                 </div>
               </div>
@@ -320,7 +320,7 @@ export function OFWDashboard({ onNavigate }: { onNavigate: (page: string) => voi
             <div className="flex gap-3 pt-4 border-t border-[#E2E8F0]">
               <button
                 onClick={() => handleViewOnExplorer('TX' + Math.random().toString(36).substring(2, 18).toUpperCase())}
-                className="flex-1 flex items-center justify-center gap-2 px-4 py-2 border border-[#E2E8F0] text-[#1E293B] rounded-lg hover:bg-[#F0F6FF] transition-colors"
+                className="flex-1 flex items-center justify-center gap-2 px-4 py-2 border border-[#E2E8F0] text-[#1E293B] rounded-2xl hover:bg-[#EFF6FF] transition-colors"
               >
                 <ExternalLink size={16} />
                 View on Explorer
@@ -343,7 +343,7 @@ export function OFWDashboard({ onNavigate }: { onNavigate: (page: string) => voi
 
     {selectedBox && (
       <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4" onClick={() => setSelectedBox(null)}>
-        <div className="bg-white rounded-lg max-w-3xl w-full p-8 animate-in fade-in zoom-in duration-200" onClick={(e) => e.stopPropagation()}>
+        <div className="bg-white rounded-2xl max-w-3xl w-full p-8 animate-in fade-in zoom-in duration-200" onClick={(e) => e.stopPropagation()}>
           <div className="flex justify-between items-start mb-6">
             <h2 className="text-2xl font-bold text-[#1E293B]">BalikBayan Box Details</h2>
             <button onClick={() => setSelectedBox(null)} className="text-[#64748B] hover:text-[#1E293B]">
@@ -390,11 +390,11 @@ export function OFWDashboard({ onNavigate }: { onNavigate: (page: string) => voi
 
               <div>
                 <p className="text-sm text-[#64748B] mb-1">Transaction Hash</p>
-                <div className="flex items-center gap-2 bg-[#F0F6FF] p-3 rounded-lg">
+                <div className="flex items-center gap-2 bg-[#EFF6FF] p-3 rounded-2xl">
                   <p className="font-mono text-sm text-[#1E293B] flex-1 break-all">{selectedBox.transactionHash}</p>
                   <button
                     onClick={() => handleCopyAddress(selectedBox.transactionHash)}
-                    className="text-[#2563A0] hover:text-[#1A3A5C]"
+                    className="text-[#1591DC] hover:text-[#2C5EAD]"
                   >
                     <Copy size={16} />
                   </button>
@@ -409,13 +409,13 @@ export function OFWDashboard({ onNavigate }: { onNavigate: (page: string) => voi
               <div className="flex gap-3 pt-4 border-t border-[#E2E8F0]">
                 <button
                   onClick={() => handleShareBox(selectedBox)}
-                  className="flex-1 px-4 py-2 bg-[#1A3A5C] text-white rounded-lg hover:bg-[#2563A0] transition-colors"
+                  className="flex-1 px-4 py-2 bg-[#2C5EAD] text-white rounded-2xl hover:bg-[#1591DC] transition-colors"
                 >
                   Share My Box
                 </button>
                 <button
                   onClick={() => handleViewOnExplorer(selectedBox.transactionHash)}
-                  className="flex-1 flex items-center justify-center gap-2 px-4 py-2 border border-[#E2E8F0] text-[#1E293B] rounded-lg hover:bg-[#F0F6FF] transition-colors"
+                  className="flex-1 flex items-center justify-center gap-2 px-4 py-2 border border-[#E2E8F0] text-[#1E293B] rounded-2xl hover:bg-[#EFF6FF] transition-colors"
                 >
                   <ExternalLink size={16} />
                   View on Explorer

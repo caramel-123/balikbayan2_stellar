@@ -49,7 +49,7 @@ export function NFTCollection({ onNavigate }: { onNavigate: (page: string) => vo
                 <p className="text-sm text-[#64748B] mb-1">Total Boxes</p>
                 <p className="text-2xl font-bold text-[#1E293B]">{nftBoxes.length}</p>
               </div>
-              <Package size={32} className="text-[#2563A0]" />
+              <Package size={32} className="text-[#1591DC]" />
             </div>
           </Card>
 
@@ -79,7 +79,7 @@ export function NFTCollection({ onNavigate }: { onNavigate: (page: string) => vo
                 <p className="text-sm text-[#64748B] mb-1">Member Since</p>
                 <p className="text-sm font-semibold text-[#1E293B]">{memberSince}</p>
               </div>
-              <Calendar size={32} className="text-[#60A5FA]" />
+              <Calendar size={32} className="text-[#4BB8FA]" />
             </div>
           </Card>
         </div>
@@ -109,7 +109,7 @@ export function NFTCollection({ onNavigate }: { onNavigate: (page: string) => vo
                   </div>
                 </div>
                 {idx < tierProgress.length - 1 && (
-                  <div className={`h-1 w-12 rounded ${tier.current ? 'bg-[#2563A0]' : 'bg-[#E2E8F0]'}`}></div>
+                  <div className={`h-1 w-12 rounded ${tier.current ? 'bg-[#1591DC]' : 'bg-[#E2E8F0]'}`}></div>
                 )}
               </div>
             ))}
@@ -123,7 +123,7 @@ export function NFTCollection({ onNavigate }: { onNavigate: (page: string) => vo
             <select
               value={filterTier}
               onChange={(e) => setFilterTier(e.target.value)}
-              className="px-3 py-2 border border-[#E2E8F0] rounded-lg text-sm"
+              className="px-3 py-2 border border-[#E2E8F0] rounded-2xl text-sm"
             >
               <option value="all">All Tiers</option>
               <option value="common">Common</option>
@@ -164,7 +164,7 @@ export function NFTCollection({ onNavigate }: { onNavigate: (page: string) => vo
 
       {selectedBox && (
         <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4" onClick={() => setSelectedBox(null)}>
-          <div className="bg-white rounded-lg max-w-3xl w-full p-8 animate-in fade-in zoom-in duration-200" onClick={(e) => e.stopPropagation()}>
+          <div className="bg-white rounded-2xl max-w-3xl w-full p-8 animate-in fade-in zoom-in duration-200" onClick={(e) => e.stopPropagation()}>
             <div className="grid md:grid-cols-2 gap-8">
               <div>
                 <NFTBoxCard
@@ -219,13 +219,13 @@ export function NFTCollection({ onNavigate }: { onNavigate: (page: string) => vo
                 <div className="flex gap-3 pt-4">
                   <button
                     onClick={() => handleShareBox(selectedBox)}
-                    className="flex-1 px-4 py-2 bg-[#1A3A5C] text-white rounded-lg hover:bg-[#2563A0] transition-colors"
+                    className="flex-1 px-4 py-2 bg-[#2C5EAD] text-white rounded-2xl hover:bg-[#1591DC] transition-colors"
                   >
                     Share My Box
                   </button>
                   <button
                     onClick={() => handleViewOnExplorer(selectedBox.transactionHash)}
-                    className="flex-1 flex items-center justify-center gap-2 px-4 py-2 border border-[#E2E8F0] text-[#1E293B] rounded-lg hover:bg-[#F0F6FF] transition-colors"
+                    className="flex-1 flex items-center justify-center gap-2 px-4 py-2 border border-[#E2E8F0] text-[#1E293B] rounded-2xl hover:bg-[#EFF6FF] transition-colors"
                   >
                     <ExternalLink size={16} />
                     View on Explorer

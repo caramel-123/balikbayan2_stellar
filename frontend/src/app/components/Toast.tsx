@@ -34,13 +34,13 @@ export function ToastProvider({ children }: { children: ReactNode }) {
   const iconMap = {
     success: <CheckCircle size={20} className="text-[#22C55E]" />,
     error: <XCircle size={20} className="text-[#EF4444]" />,
-    info: <Info size={20} className="text-[#60A5FA]" />
+    info: <Info size={20} className="text-[#4BB8FA]" />
   };
 
   const borderColorMap = {
     success: 'border-l-[#22C55E]',
     error: 'border-l-[#EF4444]',
-    info: 'border-l-[#60A5FA]'
+    info: 'border-l-[#4BB8FA]'
   };
 
   return (
@@ -51,7 +51,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
           <div
             key={toast.id}
             className={`
-              bg-white border-l-4 ${borderColorMap[toast.type]} rounded-lg shadow-lg p-4 pr-12
+              bg-white border-l-4 ${borderColorMap[toast.type]} rounded-2xl shadow-lg p-4 pr-12
               flex items-center gap-3 min-w-[300px] max-w-md pointer-events-auto
               animate-in slide-in-from-right duration-200
             `}

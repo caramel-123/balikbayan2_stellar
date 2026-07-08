@@ -61,7 +61,7 @@ export function TransactionHistory() {
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="px-4 py-2 border border-[#E2E8F0] rounded-lg bg-white"
+            className="px-4 py-2 border border-[#E2E8F0] rounded-2xl bg-white"
           >
             <option value="all">All Status</option>
             <option value="locked">Locked</option>
@@ -74,7 +74,7 @@ export function TransactionHistory() {
           <select
             value={billTypeFilter}
             onChange={(e) => setBillTypeFilter(e.target.value)}
-            className="px-4 py-2 border border-[#E2E8F0] rounded-lg bg-white"
+            className="px-4 py-2 border border-[#E2E8F0] rounded-2xl bg-white"
           >
             <option value="all">All Bill Types</option>
             <option value="tuition">Tuition</option>
@@ -89,7 +89,7 @@ export function TransactionHistory() {
             <option value="custom">Custom</option>
           </select>
 
-          <div className="flex items-center gap-2 px-4 py-2 border border-[#E2E8F0] rounded-lg bg-white">
+          <div className="flex items-center gap-2 px-4 py-2 border border-[#E2E8F0] rounded-2xl bg-white">
             <Calendar size={20} className="text-[#64748B]" />
             <input
               type="date"
@@ -112,7 +112,7 @@ export function TransactionHistory() {
           <div className="hidden md:block">
             <Card className="overflow-hidden p-0">
               <table className="w-full">
-                <thead className="bg-[#F0F6FF]">
+                <thead className="bg-[#EFF6FF]">
                   <tr>
                     <th className="px-6 py-3 text-left text-sm font-semibold text-[#1E293B]">Date</th>
                     <th className="px-6 py-3 text-left text-sm font-semibold text-[#1E293B]">Recipient</th>
@@ -126,7 +126,7 @@ export function TransactionHistory() {
                   {filteredPromises.map(promise => (
                     <tr
                       key={promise.id}
-                      className="hover:bg-[#F0F6FF] transition-colors cursor-pointer"
+                      className="hover:bg-[#EFF6FF] transition-colors cursor-pointer"
                       onClick={() => setSelectedTransaction(promise)}
                     >
                       <td className="px-6 py-4 text-sm text-[#64748B]">
@@ -182,7 +182,7 @@ export function TransactionHistory() {
 
       {selectedTransaction && (
         <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4" onClick={() => setSelectedTransaction(null)}>
-          <div className="bg-white rounded-lg max-w-2xl w-full p-8 max-h-[90vh] overflow-y-auto animate-in fade-in zoom-in duration-200" onClick={(e) => e.stopPropagation()}>
+          <div className="bg-white rounded-2xl max-w-2xl w-full p-8 max-h-[90vh] overflow-y-auto animate-in fade-in zoom-in duration-200" onClick={(e) => e.stopPropagation()}>
             <div className="flex justify-between items-start mb-6">
               <div className="flex items-center gap-3">
                 <BillTypeIcon type={selectedTransaction.billType} size={32} />
@@ -197,7 +197,7 @@ export function TransactionHistory() {
             </div>
 
             <div className="space-y-6">
-              <div className="bg-[#F0F6FF] rounded-lg p-6 space-y-4">
+              <div className="bg-[#EFF6FF] rounded-2xl p-6 space-y-4">
                 <div className="flex justify-between items-center">
                   <span className="text-[#64748B]">Amount</span>
                   <span className="text-3xl font-mono font-bold text-[#1E293B]">₱{selectedTransaction.amount.toLocaleString()}</span>
@@ -230,7 +230,7 @@ export function TransactionHistory() {
               {Object.keys(selectedTransaction.billDetails).length > 0 && (
                 <div>
                   <p className="text-sm text-[#64748B] mb-2">Bill Details</p>
-                  <div className="bg-[#F0F6FF] p-4 rounded-lg space-y-2">
+                  <div className="bg-[#EFF6FF] p-4 rounded-2xl space-y-2">
                     {Object.entries(selectedTransaction.billDetails).map(([key, value]) => (
                       <div key={key} className="flex justify-between">
                         <span className="text-[#64748B] capitalize">{key}</span>

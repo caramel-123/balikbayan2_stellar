@@ -60,7 +60,7 @@ export function MerchantDashboard() {
                 <p className="text-sm text-[#64748B] mb-1">Customers Reached</p>
                 <p className="text-2xl font-bold text-[#1E293B]">1,842</p>
               </div>
-              <Users size={32} className="text-[#2563A0]" />
+              <Users size={32} className="text-[#1591DC]" />
             </div>
           </Card>
 
@@ -80,10 +80,10 @@ export function MerchantDashboard() {
             <h2 className="text-xl font-semibold text-[#1E293B] mb-6">Scan Customer QR</h2>
 
             <div className="flex flex-col items-center gap-6">
-              <div className="w-64 h-64 bg-[#F0F6FF] rounded-lg flex items-center justify-center border-2 border-dashed border-[#2563A0]">
+              <div className="w-64 h-64 bg-[#EFF6FF] rounded-2xl flex items-center justify-center border-2 border-dashed border-[#1591DC]">
                 {showScanner ? (
                   <div className="flex flex-col items-center gap-3">
-                    <div className="w-16 h-16 border-4 border-[#2563A0] border-t-transparent rounded-full animate-spin"></div>
+                    <div className="w-16 h-16 border-4 border-[#1591DC] border-t-transparent rounded-full animate-spin"></div>
                     <p className="text-sm text-[#64748B]">Scanning...</p>
                   </div>
                 ) : scanResult ? (
@@ -132,7 +132,7 @@ export function MerchantDashboard() {
               {recentRedemptions.map((redemption, idx) => (
                 <div
                   key={idx}
-                  className="flex items-center justify-between p-3 bg-[#F0F6FF] rounded-lg cursor-pointer hover:bg-[#E0EDFF] transition-colors"
+                  className="flex items-center justify-between p-3 bg-[#EFF6FF] rounded-2xl cursor-pointer hover:bg-[#E0EDFF] transition-colors"
                   onClick={() => setSelectedRedemption(redemption)}
                 >
                   <div className="flex items-center gap-3">
@@ -155,22 +155,22 @@ export function MerchantDashboard() {
           <h2 className="text-xl font-semibold text-[#1E293B] mb-4">Tier Discount Structure</h2>
 
           <div className="grid md:grid-cols-4 gap-4">
-            <div className="p-4 border-2 border-gray-300 rounded-lg">
+            <div className="p-4 border-2 border-gray-300 rounded-2xl">
               <TierBadge tier="silver" className="mb-2" />
               <p className="text-2xl font-bold text-[#1E293B]">5% off</p>
               <p className="text-sm text-[#64748B]">5+ boxes</p>
             </div>
-            <div className="p-4 border-2 border-yellow-400 rounded-lg">
+            <div className="p-4 border-2 border-yellow-400 rounded-2xl">
               <TierBadge tier="gold" className="mb-2" />
               <p className="text-2xl font-bold text-[#1E293B]">10% off</p>
               <p className="text-sm text-[#64748B]">12+ boxes</p>
             </div>
-            <div className="p-4 border-2 border-blue-400 rounded-lg">
+            <div className="p-4 border-2 border-blue-400 rounded-2xl">
               <TierBadge tier="diamond" className="mb-2" />
               <p className="text-2xl font-bold text-[#1E293B]">15% off</p>
               <p className="text-sm text-[#64748B]">24+ boxes</p>
             </div>
-            <div className="p-4 border-2 border-purple-400 rounded-lg">
+            <div className="p-4 border-2 border-purple-400 rounded-2xl">
               <TierBadge tier="legend" className="mb-2" />
               <p className="text-2xl font-bold text-[#1E293B]">20% off</p>
               <p className="text-sm text-[#64748B]">60+ boxes</p>
@@ -181,7 +181,7 @@ export function MerchantDashboard() {
 
       {selectedRedemption && (
         <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4" onClick={() => setSelectedRedemption(null)}>
-          <div className="bg-white rounded-lg max-w-md w-full p-6 animate-in fade-in zoom-in duration-200" onClick={(e) => e.stopPropagation()}>
+          <div className="bg-white rounded-2xl max-w-md w-full p-6 animate-in fade-in zoom-in duration-200" onClick={(e) => e.stopPropagation()}>
             <div className="flex justify-between items-start mb-6">
               <h2 className="text-xl font-bold text-[#1E293B]">Redemption Details</h2>
               <button onClick={() => setSelectedRedemption(null)} className="text-[#64748B] hover:text-[#1E293B]">
@@ -190,14 +190,14 @@ export function MerchantDashboard() {
             </div>
 
             <div className="space-y-4">
-              <div className="bg-[#F0F6FF] rounded-lg p-4">
+              <div className="bg-[#EFF6FF] rounded-2xl p-4">
                 <p className="text-sm text-[#64748B] mb-1">Customer Tier</p>
                 <TierBadge tier={selectedRedemption.tier as any} />
               </div>
 
               <div>
                 <p className="text-sm text-[#64748B] mb-1">Customer Wallet</p>
-                <p className="font-mono text-sm text-[#1E293B] bg-[#F0F6FF] p-3 rounded-lg">{selectedRedemption.wallet}</p>
+                <p className="font-mono text-sm text-[#1E293B] bg-[#EFF6FF] p-3 rounded-2xl">{selectedRedemption.wallet}</p>
               </div>
 
               <div>
@@ -210,7 +210,7 @@ export function MerchantDashboard() {
                 <p className="font-semibold text-[#1E293B]">{selectedRedemption.timestamp}</p>
               </div>
 
-              <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+              <div className="bg-green-50 border border-green-200 rounded-2xl p-4">
                 <p className="text-sm text-green-800">✓ Redemption verified successfully</p>
               </div>
 

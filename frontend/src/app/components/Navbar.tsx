@@ -20,42 +20,44 @@ export function Navbar() {
 
   return (
     <>
-      <nav className="sticky top-0 z-40 bg-white border-b border-[#E2E8F0] shadow-sm">
+      <nav className="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-[#E2E8F0]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center gap-2">
-              <Package size={32} className="text-[#2563A0]" />
+              <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-[#2C5EAD] to-[#4BB8FA] flex items-center justify-center shadow-md shadow-blue-200 shrink-0">
+                <Package size={16} className="text-white" />
+              </div>
               <div className="flex flex-col leading-tight">
-                <span className="font-bold">
-                  <span className="text-[#1A3A5C]">Balik</span>
-                  <span className="text-[#2563A0]">Bayan</span>
+                <span className="font-extrabold">
+                  <span className="text-[#2C5EAD]">Balik</span>
+                  <span className="text-[#1591DC]">Bayan</span>
                 </span>
                 <span className="text-xs text-[#64748B] italic">Every peso sent. Every sacrifice remembered.</span>
               </div>
             </div>
 
             {walletConnected && userRole && (
-              <div className="flex items-center gap-2 bg-[#F0F6FF] rounded-lg p-1">
+              <div className="flex items-center gap-2 bg-[#EFF6FF] rounded-2xl p-1">
                 <button
                   onClick={() => setUserRole('ofw')}
-                  className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
-                    userRole === 'ofw' ? 'bg-[#1A3A5C] text-white' : 'text-[#1E293B] hover:bg-white'
+                  className={`px-4 py-2 rounded-xl text-sm font-medium transition-colors ${
+                    userRole === 'ofw' ? 'bg-[#2C5EAD] text-white' : 'text-[#1E293B] hover:bg-white'
                   }`}
                 >
                   OFW View
                 </button>
                 <button
                   onClick={() => setUserRole('family')}
-                  className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
-                    userRole === 'family' ? 'bg-[#1A3A5C] text-white' : 'text-[#1E293B] hover:bg-white'
+                  className={`px-4 py-2 rounded-xl text-sm font-medium transition-colors ${
+                    userRole === 'family' ? 'bg-[#2C5EAD] text-white' : 'text-[#1E293B] hover:bg-white'
                   }`}
                 >
                   Family View
                 </button>
                 <button
                   onClick={() => setUserRole('merchant')}
-                  className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
-                    userRole === 'merchant' ? 'bg-[#1A3A5C] text-white' : 'text-[#1E293B] hover:bg-white'
+                  className={`px-4 py-2 rounded-xl text-sm font-medium transition-colors ${
+                    userRole === 'merchant' ? 'bg-[#2C5EAD] text-white' : 'text-[#1E293B] hover:bg-white'
                   }`}
                 >
                   Merchant View
@@ -70,14 +72,14 @@ export function Navbar() {
                   target="_blank"
                   rel="noopener noreferrer"
                   title="View on Stellar Expert"
-                  className="p-2 hover:bg-[#F0F6FF] rounded-lg transition-colors"
+                  className="p-2 hover:bg-[#EFF6FF] rounded-2xl transition-colors"
                 >
                   <Globe size={20} className="text-[#64748B]" />
                 </a>
               )}
 
               {walletConnected && (
-                <button className="p-2 hover:bg-[#F0F6FF] rounded-lg transition-colors relative">
+                <button className="p-2 hover:bg-[#EFF6FF] rounded-2xl transition-colors relative">
                   <Bell size={20} className="text-[#64748B]" />
                   <span className="absolute top-1 right-1 w-2 h-2 bg-[#EF4444] rounded-full"></span>
                 </button>
@@ -87,7 +89,7 @@ export function Navbar() {
                 <div className="relative">
                   <button
                     onClick={() => setShowWalletMenu(!showWalletMenu)}
-                    className="flex items-center gap-2 px-4 py-2 bg-[#1A3A5C] text-white rounded-lg hover:bg-[#2563A0] transition-colors"
+                    className="flex items-center gap-2 px-4 py-2 bg-[#2C5EAD] text-white rounded-2xl hover:bg-[#1591DC] transition-colors"
                   >
                     <User size={16} />
                     <span className="font-mono text-sm">{walletAddress}</span>
@@ -95,13 +97,13 @@ export function Navbar() {
                   </button>
 
                   {showWalletMenu && (
-                    <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-[#E2E8F0] py-1">
+                    <div className="absolute right-0 mt-2 w-48 bg-white rounded-2xl shadow-lg border border-[#E2E8F0] py-1">
                       <button
                         onClick={() => {
                           navigator.clipboard.writeText(walletAddress);
                           setShowWalletMenu(false);
                         }}
-                        className="w-full text-left px-4 py-2 hover:bg-[#F0F6FF] text-[#1E293B]"
+                        className="w-full text-left px-4 py-2 hover:bg-[#EFF6FF] text-[#1E293B]"
                       >
                         Copy Address
                       </button>
@@ -110,7 +112,7 @@ export function Navbar() {
                           setShowRoleModal(true);
                           setShowWalletMenu(false);
                         }}
-                        className="w-full text-left px-4 py-2 hover:bg-[#F0F6FF] text-[#1E293B]"
+                        className="w-full text-left px-4 py-2 hover:bg-[#EFF6FF] text-[#1E293B]"
                       >
                         Switch Role
                       </button>
@@ -119,7 +121,7 @@ export function Navbar() {
                           disconnectWallet();
                           setShowWalletMenu(false);
                         }}
-                        className="w-full text-left px-4 py-2 hover:bg-[#F0F6FF] text-[#EF4444]"
+                        className="w-full text-left px-4 py-2 hover:bg-[#EFF6FF] text-[#EF4444]"
                       >
                         Disconnect
                       </button>
@@ -128,8 +130,13 @@ export function Navbar() {
                 </div>
               ) : (
                 <div className="flex flex-col items-end gap-1">
-                  <Button onClick={handleConnect} disabled={connecting}>
-                    {connecting ? 'Connecting...' : 'Connect Freighter Wallet'}
+                  <Button onClick={handleConnect} disabled={connecting} className="text-sm px-3 py-2 sm:px-4">
+                    {connecting ? 'Connecting…' : (
+                      <>
+                        <span className="hidden sm:inline">Connect Freighter Wallet</span>
+                        <span className="sm:hidden">Connect Wallet</span>
+                      </>
+                    )}
                   </Button>
                   {walletError && (
                     <span className="text-xs text-red-500 max-w-xs text-right">{walletError}</span>
@@ -143,7 +150,7 @@ export function Navbar() {
 
       {showRoleModal && (
         <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-lg max-w-2xl w-full p-6 animate-in fade-in zoom-in duration-200">
+          <div className="bg-white rounded-2xl max-w-2xl w-full p-6 animate-in fade-in zoom-in duration-200">
             <h2 className="text-2xl font-semibold text-[#1E293B] mb-6 text-center">Who are you?</h2>
 
             <div className="grid md:grid-cols-3 gap-4">
@@ -152,7 +159,7 @@ export function Navbar() {
                   setUserRole('ofw');
                   setShowRoleModal(false);
                 }}
-                className="p-6 border-2 border-[#E2E8F0] rounded-lg hover:border-[#2563A0] hover:bg-[#F0F6FF] transition-all group"
+                className="p-6 border-2 border-[#E2E8F0] rounded-2xl hover:border-[#1591DC] hover:bg-[#EFF6FF] transition-all group"
               >
                 <div className="flex flex-col items-center gap-3">
                   <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
@@ -168,7 +175,7 @@ export function Navbar() {
                   setUserRole('family');
                   setShowRoleModal(false);
                 }}
-                className="p-6 border-2 border-[#E2E8F0] rounded-lg hover:border-[#2563A0] hover:bg-[#F0F6FF] transition-all group"
+                className="p-6 border-2 border-[#E2E8F0] rounded-2xl hover:border-[#1591DC] hover:bg-[#EFF6FF] transition-all group"
               >
                 <div className="flex flex-col items-center gap-3">
                   <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
@@ -184,7 +191,7 @@ export function Navbar() {
                   setUserRole('merchant');
                   setShowRoleModal(false);
                 }}
-                className="p-6 border-2 border-[#E2E8F0] rounded-lg hover:border-[#2563A0] hover:bg-[#F0F6FF] transition-all group"
+                className="p-6 border-2 border-[#E2E8F0] rounded-2xl hover:border-[#1591DC] hover:bg-[#EFF6FF] transition-all group"
               >
                 <div className="flex flex-col items-center gap-3">
                   <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">

@@ -32,10 +32,10 @@ export function Sidebar({ currentPage, onNavigate }: SidebarProps) {
                 key={item.id}
                 onClick={() => onNavigate(item.id)}
                 className={`
-                  w-full flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-all
+                  w-full flex items-center gap-3 px-4 py-3 rounded-2xl font-medium transition-all
                   ${isActive
-                    ? 'bg-[#F0F6FF] text-[#2563A0]'
-                    : 'text-[#64748B] hover:bg-[#F0F6FF] hover:text-[#1E293B]'
+                    ? 'bg-[#EFF6FF] text-[#1591DC]'
+                    : 'text-[#64748B] hover:bg-[#EFF6FF] hover:text-[#1E293B]'
                   }
                 `}
               >
@@ -48,13 +48,13 @@ export function Sidebar({ currentPage, onNavigate }: SidebarProps) {
 
         <div className="px-4 py-4 border-t border-[#E2E8F0]">
           <div className="space-y-3">
-            <div className="px-4 py-2 bg-[#F0F6FF] rounded-lg">
+            <div className="px-4 py-2 bg-[#EFF6FF] rounded-2xl">
               <p className="text-xs text-[#64748B] mb-1">Connected Wallet</p>
               <p className="font-mono text-sm text-[#1E293B] truncate">{walletAddress}</p>
             </div>
             <button
               onClick={disconnectWallet}
-              className="w-full px-4 py-2 text-sm text-[#EF4444] hover:bg-red-50 rounded-lg transition-colors"
+              className="w-full px-4 py-2 text-sm text-[#EF4444] hover:bg-red-50 rounded-2xl transition-colors"
             >
               Disconnect
             </button>

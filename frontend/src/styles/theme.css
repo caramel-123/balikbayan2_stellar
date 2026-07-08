@@ -4,10 +4,11 @@
   --font-size: 16px;
 
   /* BalikBayan Brand Colors */
-  --navy-dark: #1A3A5C;
-  --navy: #2563A0;
-  --sky-blue: #60A5FA;
-  --light-blue-bg: #F0F6FF;
+  --navy-dark: #2C5EAD;
+  --navy: #1591DC;
+  --sky-blue: #4BB8FA;
+  --pale-blue: #C4E2F5;
+  --light-blue-bg: #EFF6FF;
   --text-dark: #1E293B;
   --text-muted: #64748B;
   --success: #22C55E;
@@ -25,48 +26,48 @@
   --status-disputed-bg: #FFEDD5;
   --status-disputed-text: #F97316;
   --status-pending-bg: #DBEAFE;
-  --status-pending-text: #60A5FA;
+  --status-pending-text: #4BB8FA;
 
   /* Tier Colors */
   --tier-common: #9CA3AF;
-  --tier-silver: #C0C0C0;
-  --tier-gold: #FFD700;
-  --tier-diamond: #60A5FA;
-  --tier-legend: linear-gradient(90deg, #F59E0B, #EF4444, #A855F7, #60A5FA);
+  --tier-silver: #9CA3AF;
+  --tier-gold: #FACC15;
+  --tier-diamond: #3B82F6;
+  --tier-legend: linear-gradient(90deg, #FACC15, #EC4899, #A855F7);
 
   /* Theme Tokens */
-  --background: #FFFFFF;
+  --background: #F8FAFC;
   --foreground: #1E293B;
   --card: #FFFFFF;
   --card-foreground: #1E293B;
   --popover: #FFFFFF;
   --popover-foreground: #1E293B;
-  --primary: #1A3A5C;
+  --primary: #2C5EAD;
   --primary-foreground: #FFFFFF;
-  --secondary: #2563A0;
-  --secondary-foreground: #FFFFFF;
-  --muted: #F0F6FF;
+  --secondary: #C4E2F5;
+  --secondary-foreground: #1E293B;
+  --muted: #EFF6FF;
   --muted-foreground: #64748B;
-  --accent: #60A5FA;
+  --accent: #1591DC;
   --accent-foreground: #FFFFFF;
   --destructive: #EF4444;
   --destructive-foreground: #FFFFFF;
   --border: #E2E8F0;
   --input: transparent;
-  --input-background: #FFFFFF;
-  --switch-background: #E2E8F0;
+  --input-background: #F8FAFC;
+  --switch-background: #CBD5E1;
   --font-weight-medium: 600;
   --font-weight-normal: 400;
-  --ring: #60A5FA;
-  --radius: 0.5rem;
+  --ring: #4BB8FA;
+  --radius: 1rem;
   --sidebar: #FFFFFF;
   --sidebar-foreground: #1E293B;
-  --sidebar-primary: #1A3A5C;
+  --sidebar-primary: #2C5EAD;
   --sidebar-primary-foreground: #FFFFFF;
-  --sidebar-accent: #F0F6FF;
+  --sidebar-accent: #EFF6FF;
   --sidebar-accent-foreground: #1E293B;
   --sidebar-border: #E2E8F0;
-  --sidebar-ring: #60A5FA;
+  --sidebar-ring: #4BB8FA;
 }
 
 .dark {
@@ -154,6 +155,7 @@
 
   body {
     @apply bg-background text-foreground;
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
   }
 
   /**

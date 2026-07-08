@@ -128,7 +128,7 @@ export function FamilyDashboard() {
       <div className="max-w-7xl mx-auto px-4 py-8 space-y-8">
         <h1 className="text-3xl font-bold text-[#1E293B]">Family Dashboard</h1>
 
-        <div className={`rounded-lg p-6 text-white ${
+        <div className={`rounded-2xl p-6 text-white ${
           currentTier === 'legend' ? 'bg-gradient-to-r from-yellow-500 via-pink-500 to-purple-500' :
           currentTier === 'diamond' ? 'bg-blue-500' :
           currentTier === 'gold' ? 'bg-yellow-500' :
@@ -146,7 +146,7 @@ export function FamilyDashboard() {
               </p>
             </div>
             {currentTier !== 'common' && (
-              <Button onClick={() => setShowTierQR(true)} className="bg-white text-[#1A3A5C] hover:bg-gray-100">
+              <Button onClick={() => setShowTierQR(true)} className="bg-white text-[#2C5EAD] hover:bg-gray-100">
                 <QrCode size={20} className="mr-2" /> Show My Tier
               </Button>
             )}
@@ -220,7 +220,7 @@ export function FamilyDashboard() {
       {/* Promise details modal */}
       {selectedPromiseForDetails && (
         <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4" onClick={() => setSelectedPromiseForDetails(null)}>
-          <div className="bg-white rounded-lg max-w-2xl w-full p-8 max-h-[90vh] overflow-y-auto animate-in fade-in zoom-in duration-200" onClick={e => e.stopPropagation()}>
+          <div className="bg-white rounded-2xl max-w-2xl w-full p-8 max-h-[90vh] overflow-y-auto animate-in fade-in zoom-in duration-200" onClick={e => e.stopPropagation()}>
             <div className="flex justify-between items-start mb-6">
               <div className="flex items-center gap-3">
                 <BillTypeIcon type={selectedPromiseForDetails.billType} size={32} />
@@ -232,7 +232,7 @@ export function FamilyDashboard() {
               <button onClick={() => setSelectedPromiseForDetails(null)} className="text-[#64748B] hover:text-[#1E293B]"><X size={24} /></button>
             </div>
             <div className="space-y-6">
-              <div className="bg-[#F0F6FF] rounded-lg p-6 space-y-4">
+              <div className="bg-[#EFF6FF] rounded-2xl p-6 space-y-4">
                 <div className="flex justify-between items-center">
                   <span className="text-[#64748B]">Amount</span>
                   <span className="text-3xl font-mono font-bold text-[#1E293B]">₱{selectedPromiseForDetails.amount.toLocaleString()}</span>
@@ -255,7 +255,7 @@ export function FamilyDashboard() {
               {Object.keys(selectedPromiseForDetails.billDetails).length > 0 && (
                 <div>
                   <p className="text-sm text-[#64748B] mb-2">Bill Details</p>
-                  <div className="bg-[#F0F6FF] p-4 rounded-lg space-y-2">
+                  <div className="bg-[#EFF6FF] p-4 rounded-2xl space-y-2">
                     {Object.entries(selectedPromiseForDetails.billDetails).map(([key, value]) => (
                       <div key={key} className="flex justify-between">
                         <span className="text-[#64748B] capitalize">{key}</span>
@@ -280,7 +280,7 @@ export function FamilyDashboard() {
       {/* Proof submission modal */}
       {showProofModal && (
         <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-lg max-w-2xl w-full p-6 max-h-[90vh] overflow-y-auto animate-in fade-in zoom-in duration-200">
+          <div className="bg-white rounded-2xl max-w-2xl w-full p-6 max-h-[90vh] overflow-y-auto animate-in fade-in zoom-in duration-200">
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-2xl font-semibold text-[#1E293B]">
                 Prove {selectedPromise && getBillTypeLabel(selectedPromise.billType)} was paid
@@ -295,7 +295,7 @@ export function FamilyDashboard() {
                 <button
                   key={method}
                   onClick={() => setUploadMethod(method)}
-                  className={`flex-1 py-3 px-4 rounded-lg border-2 transition-all ${uploadMethod === method ? 'border-[#2563A0] bg-[#F0F6FF]' : 'border-[#E2E8F0]'}`}
+                  className={`flex-1 py-3 px-4 rounded-2xl border-2 transition-all ${uploadMethod === method ? 'border-[#1591DC] bg-[#EFF6FF]' : 'border-[#E2E8F0]'}`}
                 >
                   {method === 'photo' && <Upload size={20} className="mx-auto mb-1" />}
                   {method === 'qr' && <QrCode size={20} className="mx-auto mb-1" />}
@@ -317,7 +317,7 @@ export function FamilyDashboard() {
                 {uploadedImage ? (
                   <div className="space-y-4">
                     <div className="relative">
-                      <img src={uploadedImage.preview} alt="Receipt" className="w-full rounded-lg max-h-64 object-contain border border-[#E2E8F0]" />
+                      <img src={uploadedImage.preview} alt="Receipt" className="w-full rounded-2xl max-h-64 object-contain border border-[#E2E8F0]" />
                       <button
                         onClick={() => { setUploadedImage(null); setVerificationResult(null); }}
                         className="absolute top-2 right-2 bg-white rounded-full p-1 shadow"
@@ -331,7 +331,7 @@ export function FamilyDashboard() {
                       </Button>
                     )}
                     {verificationResult && (
-                      <div className={`p-4 rounded-lg border ${verificationResult.verified ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200'}`}>
+                      <div className={`p-4 rounded-2xl border ${verificationResult.verified ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200'}`}>
                         <div className="flex items-center gap-2 mb-2">
                           {verificationResult.verified
                             ? <CheckCircle size={20} className="text-green-600" />
@@ -351,7 +351,7 @@ export function FamilyDashboard() {
                 ) : (
                   <button
                     onClick={() => fileInputRef.current?.click()}
-                    className="w-full border-2 border-dashed border-[#E2E8F0] rounded-lg p-12 text-center hover:border-[#2563A0] transition-colors cursor-pointer"
+                    className="w-full border-2 border-dashed border-[#E2E8F0] rounded-2xl p-12 text-center hover:border-[#1591DC] transition-colors cursor-pointer"
                   >
                     <Upload size={48} className="mx-auto text-[#64748B] mb-4" />
                     <p className="text-[#1E293B] font-medium mb-2">Drop receipt photo here or click to upload</p>
@@ -362,7 +362,7 @@ export function FamilyDashboard() {
             )}
 
             {uploadMethod === 'qr' && (
-              <div className="border-2 border-[#E2E8F0] rounded-lg p-12 text-center">
+              <div className="border-2 border-[#E2E8F0] rounded-2xl p-12 text-center">
                 <Camera size={48} className="mx-auto text-[#64748B] mb-4" />
                 <p className="text-[#1E293B] font-medium mb-2">Open camera to scan payment QR code</p>
                 <Button onClick={() => showToast('info', 'Camera QR scanning coming soon')}>Open Camera</Button>
@@ -371,9 +371,9 @@ export function FamilyDashboard() {
 
             {uploadMethod === 'manual' && (
               <div className="space-y-4">
-                <input type="text" placeholder="Account Number / Reference Number" className="w-full px-4 py-2 border border-[#E2E8F0] rounded-lg" />
-                <input type="number" placeholder="Amount Paid (PHP)" className="w-full px-4 py-2 border border-[#E2E8F0] rounded-lg" />
-                <input type="text" placeholder="Date of Payment" className="w-full px-4 py-2 border border-[#E2E8F0] rounded-lg" />
+                <input type="text" placeholder="Account Number / Reference Number" className="w-full px-4 py-2 border border-[#E2E8F0] rounded-2xl" />
+                <input type="number" placeholder="Amount Paid (PHP)" className="w-full px-4 py-2 border border-[#E2E8F0] rounded-2xl" />
+                <input type="text" placeholder="Date of Payment" className="w-full px-4 py-2 border border-[#E2E8F0] rounded-2xl" />
               </div>
             )}
 
@@ -408,7 +408,7 @@ export function FamilyDashboard() {
       {/* Tier QR modal */}
       {showTierQR && (
         <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4" onClick={() => setShowTierQR(false)}>
-          <div className="bg-white rounded-lg max-w-md w-full p-8 animate-in fade-in zoom-in duration-200" onClick={e => e.stopPropagation()}>
+          <div className="bg-white rounded-2xl max-w-md w-full p-8 animate-in fade-in zoom-in duration-200" onClick={e => e.stopPropagation()}>
             <div className="flex justify-between items-start mb-6">
               <h2 className="text-2xl font-bold text-[#1E293B]">My Tier Badge</h2>
               <button onClick={() => setShowTierQR(false)} className="text-[#64748B] hover:text-[#1E293B]"><X size={24} /></button>
@@ -420,17 +420,17 @@ export function FamilyDashboard() {
                 currentTier === 'diamond' ? 'bg-blue-100' :
                 currentTier === 'gold' ? 'bg-yellow-100' : 'bg-gray-200'
               }`}>
-                <QrCode size={120} className="text-[#1A3A5C] mb-4" />
-                <div className="bg-white px-4 py-2 rounded-lg shadow-md"><TierBadge tier={currentTier} /></div>
+                <QrCode size={120} className="text-[#2C5EAD] mb-4" />
+                <div className="bg-white px-4 py-2 rounded-2xl shadow-md"><TierBadge tier={currentTier} /></div>
               </div>
-              <div className="p-4 bg-[#F0F6FF] rounded-lg">
+              <div className="p-4 bg-[#EFF6FF] rounded-2xl">
                 <p className="text-sm text-[#64748B] mb-1">Wallet Address</p>
                 <div className="flex items-center gap-2">
                   <p className="font-mono text-sm text-[#1E293B] break-all flex-1">{walletAddress}</p>
-                  <button onClick={() => handleCopyAddress(walletAddress)} className="text-[#2563A0]"><Copy size={14} /></button>
+                  <button onClick={() => handleCopyAddress(walletAddress)} className="text-[#1591DC]"><Copy size={14} /></button>
                 </div>
               </div>
-              <div className="p-4 bg-green-50 border border-green-200 rounded-lg text-center">
+              <div className="p-4 bg-green-50 border border-green-200 rounded-2xl text-center">
                 <p className="font-semibold text-green-800">
                   {currentTier === 'legend' ? '20%' : currentTier === 'diamond' ? '15%' : currentTier === 'gold' ? '10%' : '5%'} Discount
                 </p>

@@ -15,12 +15,12 @@ export function Button({
   className = '',
   ...props
 }: ButtonProps) {
-  const baseStyles = 'px-4 py-2 rounded-lg font-medium transition-all duration-200 flex items-center justify-center gap-2';
+  const baseStyles = 'px-4 py-2 rounded-2xl font-medium transition-all duration-200 flex items-center justify-center gap-2 whitespace-nowrap';
 
   const variantStyles = {
-    primary: 'bg-[#1A3A5C] text-white hover:bg-[#2563A0] active:bg-[#1A3A5C] disabled:bg-gray-300 disabled:cursor-not-allowed',
-    secondary: 'border-2 border-[#1A3A5C] text-[#1A3A5C] bg-white hover:bg-[#F0F6FF] active:bg-[#E2E8F0] disabled:border-gray-300 disabled:text-gray-400 disabled:cursor-not-allowed',
-    ghost: 'text-[#1A3A5C] bg-transparent hover:underline disabled:text-gray-400 disabled:cursor-not-allowed',
+    primary: 'bg-[#2C5EAD] text-white hover:bg-[#1591DC] active:bg-[#2C5EAD] disabled:bg-gray-300 disabled:cursor-not-allowed',
+    secondary: 'border-2 border-[#2C5EAD] text-[#2C5EAD] bg-white hover:bg-[#EFF6FF] active:bg-[#E2E8F0] disabled:border-gray-300 disabled:text-gray-400 disabled:cursor-not-allowed',
+    ghost: 'text-[#2C5EAD] bg-transparent hover:underline disabled:text-gray-400 disabled:cursor-not-allowed',
     destructive: 'bg-[#EF4444] text-white hover:bg-[#DC2626] active:bg-[#EF4444] disabled:bg-gray-300 disabled:cursor-not-allowed'
   };
 

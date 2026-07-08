@@ -1,7 +1,15 @@
-import { Package, Lock, FileCheck, ArrowRight, Users, DollarSign, Store } from 'lucide-react';
+import { Package, Send, Receipt, CheckCircle2, ArrowRight, Users, Heart, Store, Sparkles, Shield, Wallet } from 'lucide-react';
 import { Button } from '../components/Button';
 import { useApp } from '../context/AppContext';
 import { useState } from 'react';
+
+const TIER_SHOWCASE = [
+  { tier: 'Common', boxes: '0–4 boxes', bg: 'from-slate-400 to-slate-500', glow: '' },
+  { tier: 'Silver', boxes: '5–11 boxes', bg: 'from-slate-300 to-slate-500', glow: '' },
+  { tier: 'Gold', boxes: '12–23 boxes', bg: 'from-yellow-400 to-amber-500', glow: 'shadow-yellow-200' },
+  { tier: 'Diamond', boxes: '24–59 boxes', bg: 'from-blue-400 to-indigo-600', glow: 'shadow-blue-200' },
+  { tier: 'Legend', boxes: '60+ boxes', bg: 'from-yellow-400 via-pink-500 to-purple-600', glow: 'shadow-purple-200' },
+];
 
 export function LandingPage() {
   const { connectWallet, setUserRole } = useApp();
@@ -31,224 +39,250 @@ export function LandingPage() {
 
   return (
     <>
-      <div className="min-h-screen bg-white">
-        <section className="relative bg-gradient-to-br from-white via-[#F0F6FF] to-white py-20 px-4">
-          <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 items-center">
-            <div className="space-y-6">
-              <h1 className="text-5xl font-bold text-[#1E293B]">
-                Send money home with purpose.
-              </h1>
-              <p className="text-xl text-[#64748B]">
-                Lock funds for tuition, bills, and essentials. Earn collectible BalikBayan boxes. Unlock real rewards for your family.
-              </p>
-              <div className="flex gap-4">
-                <Button onClick={handleConnect}>
-                  Connect Wallet
-                </Button>
-                <Button variant="ghost" onClick={() => document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' })}>
-                  See How It Works
-                </Button>
-              </div>
-            </div>
+      <div className="min-h-screen bg-white" style={{ fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif" }}>
+        {/* Hero */}
+        <section className="relative min-h-[88vh] flex items-center overflow-hidden bg-gradient-to-b from-[#EFF6FF] via-white to-white">
+          <div className="absolute top-0 right-0 w-[600px] h-[600px] rounded-full bg-[radial-gradient(circle,rgba(196,226,245,0.6),transparent_70%)] blur-3xl pointer-events-none" />
+          <div className="absolute bottom-0 left-0 w-[400px] h-[400px] rounded-full bg-[radial-gradient(circle,rgba(75,184,250,0.2),transparent_70%)] blur-3xl pointer-events-none" />
 
-            <div className="flex justify-center">
-              <div className="relative">
-                <div className="w-64 h-64 bg-gradient-to-br from-[#2563A0] to-[#60A5FA] rounded-2xl flex items-center justify-center shadow-2xl animate-pulse">
-                  <Package size={128} className="text-white" />
-                </div>
-                <div className="absolute -top-4 -right-4 bg-yellow-400 text-yellow-900 px-4 py-2 rounded-lg font-bold shadow-lg">
-                  #001
-                </div>
-              </div>
-            </div>
+          <div className="hidden lg:flex absolute top-24 right-[15%] w-14 h-14 rounded-2xl bg-white shadow-lg shadow-blue-100 border border-[#C4E2F5] items-center justify-center animate-bounce" style={{ animationDuration: '3s' }}>
+            <Package className="w-6 h-6 text-[#2C5EAD]" />
           </div>
-        </section>
-
-        <section id="how-it-works" className="py-20 px-4 bg-white">
-          <div className="max-w-7xl mx-auto">
-            <h2 className="text-3xl font-bold text-center text-[#1E293B] mb-12">How It Works</h2>
-
-            <div className="grid md:grid-cols-3 gap-8">
-              <div className="flex flex-col items-center text-center space-y-4">
-                <div className="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center">
-                  <Lock size={40} className="text-blue-600" />
-                </div>
-                <h3 className="text-xl font-semibold text-[#1E293B]">Lock funds for a purpose</h3>
-                <p className="text-[#64748B]">
-                  Specify the exact bill or expense. Set conditions for release. Your family knows exactly what it's for.
-                </p>
-              </div>
-
-              <div className="flex flex-col items-center text-center space-y-4">
-                <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center">
-                  <FileCheck size={40} className="text-green-600" />
-                </div>
-                <h3 className="text-xl font-semibold text-[#1E293B]">Family proves bill paid</h3>
-                <p className="text-[#64748B]">
-                  They upload a receipt or proof of payment. Our system verifies it automatically.
-                </p>
-              </div>
-
-              <div className="flex flex-col items-center text-center space-y-4">
-                <div className="w-20 h-20 bg-purple-100 rounded-full flex items-center justify-center">
-                  <ArrowRight size={40} className="text-purple-600" />
-                </div>
-                <h3 className="text-xl font-semibold text-[#1E293B]">Money releases automatically</h3>
-                <p className="text-[#64748B]">
-                  Once verified, funds are released instantly. A collectible BalikBayan box is minted to your wallet.
-                </p>
-              </div>
-            </div>
+          <div className="hidden lg:flex absolute top-48 right-[8%] w-10 h-10 rounded-xl bg-gradient-to-br from-yellow-400 to-amber-500 shadow-md items-center justify-center animate-bounce" style={{ animationDuration: '4s', animationDelay: '0.5s' }}>
+            <Sparkles className="w-4 h-4 text-white" />
           </div>
-        </section>
-
-        <section className="py-20 px-4 bg-[#F0F6FF]">
-          <div className="max-w-7xl mx-auto">
-            <h2 className="text-3xl font-bold text-center text-[#1E293B] mb-12">Built For</h2>
-
-            <div className="grid md:grid-cols-3 gap-6">
-              <div className="bg-white rounded-lg p-6 shadow-sm border border-[#E2E8F0] hover:shadow-md transition-shadow">
-                <div className="flex flex-col items-center text-center space-y-4">
-                  <Users size={48} className="text-blue-600" />
-                  <h3 className="text-xl font-semibold text-[#1E293B]">OFW Senders</h3>
-                  <p className="text-[#64748B]">
-                    Send money with confidence knowing it goes exactly where it's needed. Build your legacy with every box.
-                  </p>
-                  <Button variant="secondary" onClick={handleConnect}>
-                    I'm sending money
-                  </Button>
-                </div>
-              </div>
-
-              <div className="bg-white rounded-lg p-6 shadow-sm border border-[#E2E8F0] hover:shadow-md transition-shadow">
-                <div className="flex flex-col items-center text-center space-y-4">
-                  <DollarSign size={48} className="text-green-600" />
-                  <h3 className="text-xl font-semibold text-[#1E293B]">Family Receivers</h3>
-                  <p className="text-[#64748B]">
-                    Receive funds for bills and essentials. Unlock tier-based perks and discounts from partner merchants.
-                  </p>
-                  <Button variant="secondary" onClick={handleConnect}>
-                    I'm receiving money
-                  </Button>
-                </div>
-              </div>
-
-              <div className="bg-white rounded-lg p-6 shadow-sm border border-[#E2E8F0] hover:shadow-md transition-shadow">
-                <div className="flex flex-col items-center text-center space-y-4">
-                  <Store size={48} className="text-purple-600" />
-                  <h3 className="text-xl font-semibold text-[#1E293B]">Merchant Partners</h3>
-                  <p className="text-[#64748B]">
-                    Reach OFW families with exclusive offers. Verify tier status and provide meaningful discounts.
-                  </p>
-                  <Button variant="secondary" onClick={handleConnect}>
-                    Partner with us
-                  </Button>
-                </div>
-              </div>
-            </div>
+          <div className="hidden lg:flex absolute bottom-32 right-[20%] w-12 h-12 rounded-2xl bg-white shadow-lg border border-[#C4E2F5] items-center justify-center animate-bounce" style={{ animationDuration: '3.5s', animationDelay: '1s' }}>
+            <Shield className="w-5 h-5 text-[#1591DC]" />
           </div>
-        </section>
 
-        <section className="py-20 px-4 bg-[#1A3A5C] text-white">
-          <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-12 items-center">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 py-20 grid lg:grid-cols-2 gap-16 items-center relative">
             <div>
-              <h2 className="text-3xl font-bold mb-6">Every remittance earns a box. Every box builds your legacy.</h2>
-              <div className="space-y-4">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-gray-400 rounded-lg"></div>
-                  <div>
-                    <h4 className="font-semibold">Common (0-4 boxes)</h4>
-                    <p className="text-sm text-gray-300">Start your collection</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-gray-300 rounded-lg"></div>
-                  <div>
-                    <h4 className="font-semibold">Silver (5+ boxes)</h4>
-                    <p className="text-sm text-gray-300">5% off at partner stores</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-yellow-400 rounded-lg"></div>
-                  <div>
-                    <h4 className="font-semibold">Gold (12+ boxes)</h4>
-                    <p className="text-sm text-gray-300">10% off + priority support</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-blue-400 rounded-lg"></div>
-                  <div>
-                    <h4 className="font-semibold">Diamond (24+ boxes)</h4>
-                    <p className="text-sm text-gray-300">15% off + exclusive perks</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-gradient-to-r from-yellow-400 via-pink-400 to-purple-400 rounded-lg"></div>
-                  <div>
-                    <h4 className="font-semibold">Legend (60+ boxes)</h4>
-                    <p className="text-sm text-gray-300">20% off + VIP benefits</p>
-                  </div>
-                </div>
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#C4E2F5] text-[#2C5EAD] text-xs font-bold mb-6 uppercase tracking-wider">
+                <Sparkles className="w-3.5 h-3.5" /> Blockchain-Secured Remittance
               </div>
+              <h1 className="text-5xl sm:text-6xl font-extrabold text-[#1E293B] leading-[1.1] tracking-tight mb-6">
+                Send Money<br />
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#2C5EAD] to-[#4BB8FA]">
+                  With Purpose.
+                </span>
+              </h1>
+              <p className="text-xl text-[#64748B] leading-relaxed mb-10 max-w-lg">
+                Every peso is protected until it fulfills its promise. Blockchain escrow ensures your hard-earned money reaches exactly where it was meant to go.
+              </p>
+              <div className="flex flex-wrap gap-4">
+                <button
+                  onClick={handleConnect}
+                  className="flex items-center gap-2 px-6 py-3.5 rounded-2xl bg-[#2C5EAD] text-white font-bold text-base hover:bg-[#1591DC] transition-all shadow-lg shadow-blue-200 hover:shadow-blue-300 hover:-translate-y-0.5"
+                >
+                  <Wallet className="w-5 h-5" /> Connect Wallet
+                </button>
+                <button
+                  onClick={() => document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' })}
+                  className="flex items-center gap-2 px-6 py-3.5 rounded-2xl border-2 border-[#C4E2F5] text-[#2C5EAD] font-bold text-base hover:bg-[#EFF6FF] transition-all"
+                >
+                  See How It Works
+                </button>
+              </div>
+              <p className="mt-6 text-sm text-[#64748B] italic">"Every peso sent. Every sacrifice remembered."</p>
             </div>
 
-            <div className="flex justify-center">
-              <div className="grid grid-cols-3 gap-4">
-                {[1, 2, 3, 4, 5].map(i => (
-                  <div key={i} className="w-24 h-24 bg-white/10 rounded-lg flex items-center justify-center">
-                    <Package size={40} className="text-white/50" />
+            <div className="relative hidden lg:block">
+              <div className="bg-white rounded-3xl shadow-2xl shadow-blue-100 border border-[#E2E8F0] p-6 space-y-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-xs text-[#64748B] font-medium">Escrow Protected</p>
+                    <p className="text-3xl font-extrabold text-[#1E293B]">₱24,500</p>
+                  </div>
+                  <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#2C5EAD] to-[#4BB8FA] flex items-center justify-center shadow-md">
+                    <Shield className="w-6 h-6 text-white" />
+                  </div>
+                </div>
+                <div className="h-px bg-[#E2E8F0]" />
+                {[
+                  { label: 'Maria Santos — Electricity', progress: 60, icon: Send, color: '#F59E0B' },
+                  { label: 'Jose Reyes — Tuition', progress: 15, icon: Send, color: '#2C5EAD' },
+                ].map((p) => (
+                  <div key={p.label} className="flex items-center gap-3">
+                    <div className="w-9 h-9 rounded-xl bg-[#EFF6FF] flex items-center justify-center shrink-0">
+                      <p.icon className="w-4 h-4" style={{ color: p.color }} />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-semibold text-[#1E293B] truncate">{p.label}</p>
+                      <div className="mt-1 h-1.5 rounded-full bg-[#EFF6FF] overflow-hidden">
+                        <div className="h-full rounded-full bg-gradient-to-r from-[#2C5EAD] to-[#4BB8FA]" style={{ width: `${p.progress}%` }} />
+                      </div>
+                    </div>
                   </div>
                 ))}
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section className="py-12 px-4 bg-white border-t border-[#E2E8F0]">
-          <div className="max-w-7xl mx-auto grid md:grid-cols-3 gap-8 text-center">
-            <div>
-              <div className="text-4xl font-bold text-[#2563A0] mb-2">12,547</div>
-              <div className="text-[#64748B]">OFWs Served</div>
-            </div>
-            <div>
-              <div className="text-4xl font-bold text-[#2563A0] mb-2">₱2.8B</div>
-              <div className="text-[#64748B]">Total Remittances Locked</div>
-            </div>
-            <div>
-              <div className="text-4xl font-bold text-[#2563A0] mb-2">348</div>
-              <div className="text-[#64748B]">Partner Merchants</div>
-            </div>
-          </div>
-        </section>
-
-        <footer className="py-8 px-4 bg-[#F0F6FF] border-t border-[#E2E8F0]">
-          <div className="max-w-7xl mx-auto">
-            <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-              <div className="flex items-center gap-2">
-                <Package size={24} className="text-[#2563A0]" />
-                <div className="flex flex-col">
-                  <span className="font-bold text-[#1E293B]">
-                    <span className="text-[#1A3A5C]">Balik</span>
-                    <span className="text-[#2563A0]">Bayan</span>
-                  </span>
-                  <span className="text-xs text-[#64748B]">Every peso sent. Every sacrifice remembered.</span>
+                <div className="pt-2">
+                  <div className="flex items-center gap-3 p-3 rounded-2xl bg-gradient-to-r from-yellow-50 to-amber-50 border border-yellow-100">
+                    <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-yellow-400 to-amber-500 shadow-sm flex items-center justify-center">
+                      <Package className="w-4 h-4 text-white" />
+                    </div>
+                    <div>
+                      <p className="text-xs font-bold text-amber-800">Gold NFT Box Earned!</p>
+                      <p className="text-xs text-amber-600">Tuition promise fulfilled</p>
+                    </div>
+                    <Sparkles className="w-4 h-4 text-amber-500 ml-auto" />
+                  </div>
                 </div>
               </div>
-
-              <div className="flex gap-6 text-sm text-[#64748B]">
-                <a href="#" className="hover:text-[#2563A0]">About</a>
-                <a href="#" className="hover:text-[#2563A0]">How It Works</a>
-                <a href="#" className="hover:text-[#2563A0]">For Merchants</a>
-                <a href="#" className="hover:text-[#2563A0]">Privacy</a>
-              </div>
-
-              <div className="text-sm text-[#64748B]">
-                Built on Stellar
-              </div>
             </div>
+          </div>
+        </section>
 
-            <div className="text-center text-sm text-[#64748B] mt-4">
-              © 2026 BalikBayan. All rights reserved.
+        {/* How it works */}
+        <section id="how-it-works" className="py-24 bg-white">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6">
+            <div className="text-center mb-16">
+              <p className="text-xs font-bold text-[#1591DC] uppercase tracking-widest mb-3">How It Works</p>
+              <h2 className="text-4xl font-extrabold text-[#1E293B] tracking-tight">Three steps. One promise kept.</h2>
+            </div>
+            <div className="grid md:grid-cols-3 gap-6 relative">
+              <div className="hidden md:block absolute top-[52px] left-[calc(16.67%+32px)] right-[calc(16.67%+32px)] h-px bg-gradient-to-r from-[#C4E2F5] via-[#4BB8FA] to-[#C4E2F5]" />
+              {[
+                { num: '01', icon: Send, title: 'Lock funds for a purpose', body: "Specify the exact bill or expense. Funds enter blockchain escrow on Stellar and are locked until conditions are met.", color: '#2C5EAD' },
+                { num: '02', icon: Receipt, title: 'Family pays the bill', body: 'Your family submits a receipt. Our AI verifies authenticity and confirms payment in seconds.', color: '#1591DC' },
+                { num: '03', icon: Package, title: 'Earn a BalikBayan Box', body: 'Funds release instantly. A collectible NFT is minted — building trust and unlocking rewards.', color: '#4BB8FA' },
+              ].map((step) => (
+                <div key={step.num} className="relative flex flex-col items-center text-center p-8 rounded-3xl bg-[#F8FAFC] border border-[#E2E8F0] hover:shadow-xl hover:shadow-blue-50 transition-all hover:-translate-y-1">
+                  <div
+                    className="w-16 h-16 rounded-2xl flex items-center justify-center mb-6 shadow-lg"
+                    style={{ background: `linear-gradient(135deg, ${step.color}22, ${step.color}44)`, border: `1.5px solid ${step.color}33` }}
+                  >
+                    <step.icon className="w-7 h-7" style={{ color: step.color }} />
+                  </div>
+                  <span className="text-xs font-bold text-[#64748B] mb-2">{step.num}</span>
+                  <h3 className="text-xl font-bold text-[#1E293B] mb-3">{step.title}</h3>
+                  <p className="text-[#64748B] text-sm leading-relaxed">{step.body}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* User Roles */}
+        <section className="py-24 bg-gradient-to-b from-[#EFF6FF] to-white">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6">
+            <div className="text-center mb-16">
+              <p className="text-xs font-bold text-[#1591DC] uppercase tracking-widest mb-3">For Everyone</p>
+              <h2 className="text-4xl font-extrabold text-[#1E293B] tracking-tight">One platform. Every role.</h2>
+            </div>
+            <div className="grid md:grid-cols-3 gap-6">
+              {[
+                { icon: Users, label: 'OFW Sender', desc: 'Send remittances with full accountability.', features: ['Send with confidence', 'Track all promises', 'Earn collectibles'], cta: "I'm sending money", gradient: 'from-[#2C5EAD] to-[#1591DC]' },
+                { icon: Heart, label: 'Family Receiver', desc: 'Receive funds transparently and earn rewards.', features: ['Confirm payments easily', 'Redeem merchant perks', 'Build loyalty tier'], cta: "I'm receiving money", gradient: 'from-[#1591DC] to-[#4BB8FA]' },
+                { icon: Store, label: 'Merchant Partner', desc: 'Serve loyal families. Grow your business.', features: ['Scan & verify QR codes', 'Apply tiered discounts', 'Join loyalty ecosystem'], cta: 'Partner with us', gradient: 'from-[#4BB8FA] to-[#C4E2F5]' },
+              ].map((card) => (
+                <div key={card.label} className="bg-white rounded-3xl border border-[#E2E8F0] p-8 hover:shadow-2xl hover:shadow-blue-100 transition-all hover:-translate-y-1">
+                  <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${card.gradient} flex items-center justify-center shadow-lg mb-6`}>
+                    <card.icon className="w-6 h-6 text-white" />
+                  </div>
+                  <h3 className="text-xl font-bold text-[#1E293B] mb-2">{card.label}</h3>
+                  <p className="text-[#64748B] text-sm mb-6">{card.desc}</p>
+                  <ul className="space-y-2 mb-8">
+                    {card.features.map((f) => (
+                      <li key={f} className="flex items-center gap-2 text-sm text-[#1E293B]">
+                        <CheckCircle2 className="w-4 h-4 text-[#22C55E] shrink-0" />
+                        {f}
+                      </li>
+                    ))}
+                  </ul>
+                  <button
+                    onClick={handleConnect}
+                    className="w-full flex items-center justify-center gap-2 py-3 rounded-2xl bg-[#EFF6FF] text-[#2C5EAD] font-bold text-sm hover:bg-[#C4E2F5] transition-colors"
+                  >
+                    {card.cta} <ArrowRight className="w-4 h-4" />
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* NFT Tier Showcase */}
+        <section className="py-24 bg-white overflow-hidden">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6">
+            <div className="text-center mb-16">
+              <p className="text-xs font-bold text-[#1591DC] uppercase tracking-widest mb-3">Collectibles</p>
+              <h2 className="text-4xl font-extrabold text-[#1E293B] tracking-tight">BalikBayan Box Tiers</h2>
+              <p className="text-[#64748B] mt-3 max-w-xl mx-auto">Every fulfilled promise mints a collectible NFT. The more you send, the rarer your collection.</p>
+            </div>
+            <div className="flex flex-wrap justify-center gap-5">
+              {TIER_SHOWCASE.map((t) => (
+                <div key={t.tier} className={`group relative w-44 rounded-3xl overflow-hidden border border-white/20 shadow-xl ${t.glow} hover:-translate-y-2 transition-all cursor-pointer`}>
+                  <div className={`h-36 bg-gradient-to-br ${t.bg} flex items-center justify-center relative`}>
+                    <Package className="w-12 h-12 text-white/90 group-hover:scale-110 transition-transform" />
+                    {t.tier === 'Legend' && (
+                      <div className="absolute inset-0 bg-gradient-to-br from-yellow-400/20 via-pink-500/20 to-purple-600/20 animate-pulse" />
+                    )}
+                  </div>
+                  <div className="bg-white p-4">
+                    <p className="font-extrabold text-[#1E293B] text-sm">{t.tier}</p>
+                    <p className="text-xs text-[#64748B] mt-0.5">{t.boxes}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Stats */}
+        <section className="py-24 bg-gradient-to-br from-[#2C5EAD] to-[#1591DC]">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6">
+            <div className="text-center mb-16">
+              <h2 className="text-4xl font-extrabold text-white tracking-tight">Trusted by OFWs worldwide</h2>
+              <p className="text-blue-200 mt-3">Real numbers. Real families. Real impact.</p>
+            </div>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
+              {[
+                { label: 'OFWs Served', value: '12,547', sub: 'And growing' },
+                { label: 'Total Remittances Locked', value: '₱2.8B', sub: 'Secured on-chain' },
+                { label: 'Partner Merchants', value: '348', sub: 'Across the Philippines' },
+              ].map((s) => (
+                <div key={s.label} className="text-center p-6 rounded-3xl bg-white/10 backdrop-blur border border-white/20">
+                  <p className="text-3xl font-extrabold text-white">{s.value}</p>
+                  <p className="text-blue-100 text-sm font-semibold mt-1">{s.label}</p>
+                  <p className="text-blue-200/70 text-xs mt-0.5">{s.sub}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Footer */}
+        <footer className="bg-[#1E293B] text-slate-400 py-16">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6">
+            <div className="grid md:grid-cols-4 gap-10 mb-12">
+              <div>
+                <div className="flex items-center gap-2 mb-4">
+                  <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-[#2C5EAD] to-[#4BB8FA] flex items-center justify-center">
+                    <Package className="w-4 h-4 text-white" />
+                  </div>
+                  <span className="font-extrabold text-white text-lg">BalikBayan</span>
+                </div>
+                <p className="text-sm leading-relaxed">Every peso sent. Every sacrifice remembered.</p>
+              </div>
+              {[
+                { title: 'Platform', links: ['How It Works', 'NFT Boxes', 'Merchant Partners'] },
+                { title: 'Resources', links: ['Smart Contract', 'GitHub'] },
+                { title: 'Legal', links: ['Terms of Service', 'Privacy Policy'] },
+              ].map((col) => (
+                <div key={col.title}>
+                  <p className="text-white font-bold text-sm mb-4">{col.title}</p>
+                  <ul className="space-y-2">
+                    {col.links.map((l) => (
+                      <li key={l}>
+                        <a href="#" className="text-sm hover:text-white transition-colors">{l}</a>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+            <div className="border-t border-slate-700 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+              <p className="text-sm">© 2026 BalikBayan. Building financial accountability for OFW families.</p>
+              <p className="text-sm">Built on Stellar</p>
             </div>
           </div>
         </footer>
@@ -256,12 +290,12 @@ export function LandingPage() {
 
       {showConnectModal && (
         <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-lg max-w-md w-full p-6 animate-in fade-in zoom-in duration-200">
+          <div className="bg-white rounded-2xl max-w-md w-full p-6 animate-in fade-in zoom-in duration-200">
             <h2 className="text-2xl font-semibold text-[#1E293B] mb-4">Connect your Freighter Wallet</h2>
 
             <div className="flex flex-col items-center gap-4 py-6">
-              <div className="w-20 h-20 bg-[#F0F6FF] rounded-full flex items-center justify-center">
-                <Package size={40} className="text-[#2563A0]" />
+              <div className="w-20 h-20 bg-[#EFF6FF] rounded-full flex items-center justify-center">
+                <Package size={40} className="text-[#1591DC]" />
               </div>
               <p className="text-center text-[#64748B]">
                 Click below to connect your Freighter wallet and start using BalikBayan
@@ -269,7 +303,7 @@ export function LandingPage() {
             </div>
 
             {connectError && (
-              <div className="mb-3 p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700">
+              <div className="mb-3 p-3 bg-red-50 border border-red-200 rounded-2xl text-sm text-red-700">
                 {connectError.includes('not found') || connectError.includes('install')
                   ? <>Freighter not detected. <a href="https://www.freighter.app" target="_blank" rel="noreferrer" className="underline font-semibold">Install Freighter</a> then try again.</>
                   : connectError}
@@ -287,7 +321,7 @@ export function LandingPage() {
                 href="https://freighter.app"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="block text-center text-sm text-[#2563A0] hover:underline"
+                className="block text-center text-sm text-[#1591DC] hover:underline"
               >
                 Install Freighter
               </a>
@@ -302,7 +336,7 @@ export function LandingPage() {
 
       {showRoleModal && (
         <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-lg max-w-2xl w-full p-6 animate-in fade-in zoom-in duration-200">
+          <div className="bg-white rounded-2xl max-w-2xl w-full p-6 animate-in fade-in zoom-in duration-200">
             <h2 className="text-2xl font-semibold text-[#1E293B] mb-6 text-center">Who are you?</h2>
 
             <div className="grid md:grid-cols-3 gap-4">
@@ -311,7 +345,7 @@ export function LandingPage() {
                   setUserRole('ofw');
                   setShowRoleModal(false);
                 }}
-                className="p-6 border-2 border-[#E2E8F0] rounded-lg hover:border-[#2563A0] hover:bg-[#F0F6FF] transition-all group"
+                className="p-6 border-2 border-[#E2E8F0] rounded-2xl hover:border-[#1591DC] hover:bg-[#EFF6FF] transition-all group"
               >
                 <div className="flex flex-col items-center gap-3">
                   <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
@@ -327,7 +361,7 @@ export function LandingPage() {
                   setUserRole('family');
                   setShowRoleModal(false);
                 }}
-                className="p-6 border-2 border-[#E2E8F0] rounded-lg hover:border-[#2563A0] hover:bg-[#F0F6FF] transition-all group"
+                className="p-6 border-2 border-[#E2E8F0] rounded-2xl hover:border-[#1591DC] hover:bg-[#EFF6FF] transition-all group"
               >
                 <div className="flex flex-col items-center gap-3">
                   <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
@@ -343,7 +377,7 @@ export function LandingPage() {
                   setUserRole('merchant');
                   setShowRoleModal(false);
                 }}
-                className="p-6 border-2 border-[#E2E8F0] rounded-lg hover:border-[#2563A0] hover:bg-[#F0F6FF] transition-all group"
+                className="p-6 border-2 border-[#E2E8F0] rounded-2xl hover:border-[#1591DC] hover:bg-[#EFF6FF] transition-all group"
               >
                 <div className="flex flex-col items-center gap-3">
                   <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">

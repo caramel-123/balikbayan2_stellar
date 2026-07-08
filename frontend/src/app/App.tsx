@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { Analytics } from '@vercel/analytics/react';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 import { AppProvider, useApp } from './context/AppContext';
 import { ToastProvider } from './components/Toast';
 import { Navbar } from './components/Navbar';
@@ -10,6 +12,8 @@ import { FamilyDashboard } from './pages/FamilyDashboard';
 import { NFTCollection } from './pages/NFTCollection';
 import { TransactionHistory } from './pages/TransactionHistory';
 import { MerchantDashboard } from './pages/MerchantDashboard';
+import { InstallPrompt } from './components/InstallPrompt';
+import { OfflineBanner } from './components/OfflineBanner';
 import { Home, Send, Package, History } from 'lucide-react';
 
 function AppContent() {
@@ -53,7 +57,8 @@ function AppContent() {
   };
 
   return (
-    <div className="min-h-screen bg-[#FAFAFA]">
+    <div className="min-h-screen bg-[#F8FAFC]">
+      <OfflineBanner />
       <Navbar />
 
       {walletConnected && userRole && (
@@ -65,7 +70,7 @@ function AppContent() {
               <button
                 onClick={() => setCurrentPage('dashboard')}
                 className={`flex flex-col items-center gap-1 px-4 py-2 ${
-                  currentPage === 'dashboard' || currentPage === 'landing' ? 'text-[#2563A0]' : 'text-[#64748B]'
+                  currentPage === 'dashboard' || currentPage === 'landing' ? 'text-[#1591DC]' : 'text-[#64748B]'
                 }`}
               >
                 <Home size={20} />
@@ -76,7 +81,7 @@ function AppContent() {
                 <button
                   onClick={() => setCurrentPage('send')}
                   className={`flex flex-col items-center gap-1 px-4 py-2 ${
-                    currentPage === 'send' ? 'text-[#2563A0]' : 'text-[#64748B]'
+                    currentPage === 'send' ? 'text-[#1591DC]' : 'text-[#64748B]'
                   }`}
                 >
                   <Send size={20} />
@@ -87,7 +92,7 @@ function AppContent() {
               <button
                 onClick={() => setCurrentPage('boxes')}
                 className={`flex flex-col items-center gap-1 px-4 py-2 ${
-                  currentPage === 'boxes' ? 'text-[#2563A0]' : 'text-[#64748B]'
+                  currentPage === 'boxes' ? 'text-[#1591DC]' : 'text-[#64748B]'
                 }`}
               >
                 <Package size={20} />
@@ -97,7 +102,7 @@ function AppContent() {
               <button
                 onClick={() => setCurrentPage('history')}
                 className={`flex flex-col items-center gap-1 px-4 py-2 ${
-                  currentPage === 'history' ? 'text-[#2563A0]' : 'text-[#64748B]'
+                  currentPage === 'history' ? 'text-[#1591DC]' : 'text-[#64748B]'
                 }`}
               >
                 <History size={20} />
@@ -111,6 +116,8 @@ function AppContent() {
       <main className={walletConnected && userRole ? 'pb-20 md:pb-0 lg:pl-64' : ''}>
         {renderPage()}
       </main>
+
+      <InstallPrompt />
     </div>
   );
 }
@@ -121,6 +128,8 @@ export default function App() {
       <ToastProvider>
         <AppContent />
       </ToastProvider>
+      <Analytics />
+      <SpeedInsights />
     </AppProvider>
   );
 }

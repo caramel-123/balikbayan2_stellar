@@ -28,7 +28,7 @@ const statusConfig = {
   },
   pending: {
     bg: 'bg-[#DBEAFE]',
-    text: 'text-[#60A5FA]',
+    text: 'text-[#4BB8FA]',
     label: 'Pending'
   }
 };

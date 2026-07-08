@@ -108,9 +108,9 @@ export function SendMoneyWizard({ onNavigate }: { onNavigate: (page: string) => 
           <ArrowLeft size={20} /> Back
         </button>
 
-        <div className="bg-white rounded-lg p-8 shadow-sm border border-[#E2E8F0] space-y-6">
+        <div className="bg-white rounded-2xl p-8 shadow-sm border border-[#E2E8F0] space-y-6">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 bg-[#1A3A5C] rounded-full flex items-center justify-center">
+            <div className="w-12 h-12 bg-[#2C5EAD] rounded-full flex items-center justify-center">
               <Wallet size={24} className="text-white" />
             </div>
             <div>
@@ -119,8 +119,8 @@ export function SendMoneyWizard({ onNavigate }: { onNavigate: (page: string) => 
             </div>
           </div>
 
-          <div className="bg-[#F0F6FF] rounded-lg p-4 space-y-2">
-            <p className="text-sm font-semibold text-[#1A3A5C]">How it works</p>
+          <div className="bg-[#EFF6FF] rounded-2xl p-4 space-y-2">
+            <p className="text-sm font-semibold text-[#2C5EAD]">How it works</p>
             <ol className="text-sm text-[#64748B] space-y-1 list-decimal list-inside">
               <li>Click "Fund with Friendbot" below</li>
               <li>Testnet Friendbot sends free XLM directly to your address</li>
@@ -168,7 +168,7 @@ export function SendMoneyWizard({ onNavigate }: { onNavigate: (page: string) => 
   if (showSuccess) {
     return (
       <div className="max-w-2xl mx-auto px-4 py-16">
-        <div className="bg-white rounded-lg p-12 text-center space-y-6 shadow-lg border border-[#E2E8F0]">
+        <div className="bg-white rounded-2xl p-12 text-center space-y-6 shadow-lg border border-[#E2E8F0]">
           <div className="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mx-auto animate-bounce">
             <Check size={48} className="text-green-600" />
           </div>
@@ -177,7 +177,7 @@ export function SendMoneyWizard({ onNavigate }: { onNavigate: (page: string) => 
             {formData.recipientName || 'Your family'} has been notified. A BalikBayan Box will be minted once the payment is confirmed.
           </p>
           {contractReady && (
-            <div className="bg-[#F0F6FF] rounded-lg p-3 text-sm text-[#1A3A5C] font-mono">
+            <div className="bg-[#EFF6FF] rounded-2xl p-3 text-sm text-[#2C5EAD] font-mono">
               Funds secured on Stellar blockchain ✓
             </div>
           )}
@@ -206,7 +206,7 @@ export function SendMoneyWizard({ onNavigate }: { onNavigate: (page: string) => 
           <h1 className="text-3xl font-bold text-[#1E293B]">Send Money</h1>
           <button
             onClick={() => setShowOnRamp(true)}
-            className="text-sm text-[#2563A0] hover:underline flex items-center gap-1"
+            className="text-sm text-[#1591DC] hover:underline flex items-center gap-1"
           >
             <Wallet size={14} /> Need XLM?
           </button>
@@ -217,12 +217,12 @@ export function SendMoneyWizard({ onNavigate }: { onNavigate: (page: string) => 
             <div key={i} className="flex items-center flex-1">
               <div className={`
                 w-10 h-10 rounded-full flex items-center justify-center font-semibold
-                ${step >= i ? 'bg-[#1A3A5C] text-white' : 'bg-[#E2E8F0] text-[#64748B]'}
+                ${step >= i ? 'bg-[#2C5EAD] text-white' : 'bg-[#E2E8F0] text-[#64748B]'}
               `}>
                 {step > i ? <Check size={20} /> : i}
               </div>
               {i < 4 && (
-                <div className={`flex-1 h-1 mx-2 ${step > i ? 'bg-[#1A3A5C]' : 'bg-[#E2E8F0]'}`} />
+                <div className={`flex-1 h-1 mx-2 ${step > i ? 'bg-[#2C5EAD]' : 'bg-[#E2E8F0]'}`} />
               )}
             </div>
           ))}
@@ -230,7 +230,7 @@ export function SendMoneyWizard({ onNavigate }: { onNavigate: (page: string) => 
         <p className="text-sm text-[#64748B] mt-2">Step {step} of 4</p>
       </div>
 
-      <div className="bg-white rounded-lg p-8 shadow-sm border border-[#E2E8F0]">
+      <div className="bg-white rounded-2xl p-8 shadow-sm border border-[#E2E8F0]">
         {step === 1 && (
           <div className="space-y-6">
             <h2 className="text-2xl font-semibold text-[#1E293B]">Who are you sending to?</h2>
@@ -305,10 +305,10 @@ export function SendMoneyWizard({ onNavigate }: { onNavigate: (page: string) => 
                   <button
                     key={type}
                     onClick={() => updateFormData({ billType, billDetails: {} })}
-                    className={`p-4 rounded-lg border-2 transition-all hover:shadow-md ${
+                    className={`p-4 rounded-2xl border-2 transition-all hover:shadow-md ${
                       formData.billType === type
-                        ? 'border-[#2563A0] bg-[#F0F6FF] shadow-md'
-                        : 'border-[#E2E8F0] hover:border-[#2563A0]'
+                        ? 'border-[#1591DC] bg-[#EFF6FF] shadow-md'
+                        : 'border-[#E2E8F0] hover:border-[#1591DC]'
                     }`}
                   >
                     <div className="flex flex-col items-center gap-2">
@@ -316,7 +316,7 @@ export function SendMoneyWizard({ onNavigate }: { onNavigate: (page: string) => 
                         <Icon size={24} />
                       </div>
                       <span className="text-sm font-medium text-[#1E293B]">{config.label}</span>
-                      {formData.billType === type && <Check size={16} className="text-[#2563A0]" />}
+                      {formData.billType === type && <Check size={16} className="text-[#1591DC]" />}
                     </div>
                   </button>
                 );
@@ -378,7 +378,7 @@ export function SendMoneyWizard({ onNavigate }: { onNavigate: (page: string) => 
           <div className="space-y-6">
             <h2 className="text-2xl font-semibold text-[#1E293B]">Review and Confirm</h2>
 
-            <div className="space-y-4 bg-[#F0F6FF] rounded-lg p-6">
+            <div className="space-y-4 bg-[#EFF6FF] rounded-2xl p-6">
               <div className="flex justify-between">
                 <span className="text-[#64748B]">Recipient</span>
                 <span className="font-semibold text-[#1E293B]">{formData.recipientName}</span>
@@ -412,12 +412,12 @@ export function SendMoneyWizard({ onNavigate }: { onNavigate: (page: string) => 
             </div>
 
             {contractReady ? (
-              <div className="flex items-center gap-2 p-3 bg-green-50 border border-green-200 rounded-lg">
+              <div className="flex items-center gap-2 p-3 bg-green-50 border border-green-200 rounded-2xl">
                 <Check size={16} className="text-green-600" />
                 <span className="text-sm text-green-700">Will be secured on Stellar blockchain</span>
               </div>
             ) : (
-              <div className="flex items-center gap-2 p-3 bg-amber-50 border border-amber-200 rounded-lg">
+              <div className="flex items-center gap-2 p-3 bg-amber-50 border border-amber-200 rounded-2xl">
                 <span className="text-sm text-amber-700">⚠️ Demo mode — set VITE_CONTRACT_ID for live transactions</span>
               </div>
             )}

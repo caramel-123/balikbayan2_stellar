@@ -25,12 +25,12 @@ export function NFTBoxCard({ boxNumber, amount, date, tier, countryFlag = 'ðŸ‡µð
   return (
     <div
       className={`
-        relative bg-white rounded-lg border-2 ${config.color} ${config.glow}
+        relative bg-white rounded-2xl border-2 ${config.color} ${config.glow}
         p-4 cursor-pointer hover:scale-105 transition-transform duration-200
       `}
       onClick={onClick}
     >
-      <div className="absolute top-2 left-2 bg-[#1A3A5C] text-white px-2 py-1 rounded text-xs font-mono">
+      <div className="absolute top-2 left-2 bg-[#2C5EAD] text-white px-2 py-1 rounded text-xs font-mono">
         #{boxNumber.toString().padStart(3, '0')}
       </div>
 
@@ -39,7 +39,7 @@ export function NFTBoxCard({ boxNumber, amount, date, tier, countryFlag = 'ðŸ‡µð
       </div>
 
       <div className="flex flex-col items-center justify-center h-32 mb-4">
-        <Package size={64} className="text-[#2563A0]" />
+        <Package size={64} className="text-[#1591DC]" />
       </div>
 
       <div className="text-center space-y-1">
