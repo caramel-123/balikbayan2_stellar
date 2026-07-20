@@ -29,6 +29,13 @@ function normalizeToGAddress(addr: string): string {
   return addr;
 }
 
+function withTimeout<T>(promise: Promise<T>, ms: number, timeoutMessage: string): Promise<T> {
+  return Promise.race([
+    promise,
+    new Promise<T>((_, reject) => setTimeout(() => reject(new Error(timeoutMessage)), ms)),
+  ]);
+}
+
 export type UserRole = 'ofw' | 'family' | 'merchant' | null;
 
 export interface Escrow {
@@ -166,14 +173,20 @@ export function AppProvider({ children }: { children: ReactNode }) {
     setWalletError(null);
     try {
       const connected = await isConnected();
-      if (!connected) {
+      if (!connected.isConnected) {
         const msg = 'Freighter not found. Install the Freighter extension at freighter.app';
         setWalletError(msg);
         throw new Error(msg);
       }
 
-      // Always call requestAccess — opens Freighter popup if needed, returns address
-      const accessResult = await requestAccess();
+      // Always call requestAccess — opens Freighter popup if needed, returns address.
+      // Freighter's requestAccess has no internal timeout, so a locked/unresponsive
+      // extension would otherwise hang this forever with no popup and no error.
+      const accessResult = await withTimeout(
+        requestAccess(),
+        15000,
+        'Freighter did not respond. Make sure the extension is unlocked and try again.'
+      );
       if (accessResult.error) {
         const msg = accessResult.error.message ?? 'Access denied by Freighter.';
         setWalletError(msg);
