@@ -241,5 +241,45 @@ soroban contract invoke \
 ## Target Users
 Filipino OFWs (10 million strong) sending PHP 1.6 trillion home annually — working in Saudi Arabia, UAE, Hong Kong, Singapore, and beyond. They earn PHP 40,000–120,000/month abroad and send 60–80% home. They have no way to earmark funds, no proof of their remittance history for loan applications, and receive zero recognition for years of sacrifice. BalikBayan gives them control, proof, and rewards — all in one wallet.
 
+## User Testing & Feedback
+
+### Testers
+
+<!-- TODO: replace with real testnet activity — one row per unique wallet that called create_escrow or confirm_payment. Pull tx hashes from Stellar Expert. Minimum 10 rows required. -->
+
+| Name | Wallet Address | Transaction Hash |
+|---|---|---|
+| TODO | G... | `xxxxxxxx...xxxxxxxx` |
+| TODO | G... | `xxxxxxxx...xxxxxxxx` |
+| TODO | G... | `xxxxxxxx...xxxxxxxx` |
+| TODO | G... | `xxxxxxxx...xxxxxxxx` |
+| TODO | G... | `xxxxxxxx...xxxxxxxx` |
+| TODO | G... | `xxxxxxxx...xxxxxxxx` |
+| TODO | G... | `xxxxxxxx...xxxxxxxx` |
+| TODO | G... | `xxxxxxxx...xxxxxxxx` |
+| TODO | G... | `xxxxxxxx...xxxxxxxx` |
+| TODO | G... | `xxxxxxxx...xxxxxxxx` |
+
+### Feedback Collection
+
+<!-- TODO: replace with your actual feedback form link and real response summary -->
+
+We collect feedback from OFWs and family members who test the flow via a short Google Form covering ease of wallet connection, clarity of the escrow/proof-of-payment steps, and trust in the AI receipt verification.
+
+Feedback Form & Responses: [TODO — link to Google Form or exported responses]
+
+**Summary of feedback so far:**
+- TODO — e.g. "Freighter setup was confusing for first-time wallet users"
+- TODO — e.g. "Wanted a clearer status indicator while waiting for AI receipt verification"
+- TODO — e.g. "Liked the NFT box as proof of a completed remittance"
+
+### Product Improvements (Based on User Feedback)
+
+<!-- TODO: map real feedback to the commit that addressed it, once available -->
+
+| Feedback | Change Made | Commit |
+|---|---|---|
+| TODO | TODO | TODO |
+
 ## Why Stellar
 No other chain gives sub-cent fees with native USDC support at the speed OFW remittances demand. Stellar's 3–5 second finality and sub-PHP-1 fees make this directly competitive against Remitly, Western Union, and GCash padala. The escrow contract is composable — the same pattern works for any conditional payment use case beyond remittances.
