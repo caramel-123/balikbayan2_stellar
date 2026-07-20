@@ -2,6 +2,8 @@
 # BalikBayan
 OFW conditional remittance and NFT legacy platform, built on Stellar.
 
+**Live Demo:** [balikbayan2-stellar.vercel.app](https://balikbayan2-stellar.vercel.app)
+
 ## Problem
 A Filipino OFW working in Riyadh sends PHP 20,000 home every month for tuition, electricity, and medicine. Once the money hits the family's GCash — he loses all control. He has no way to ensure funds reach their intended purpose, no tamper-proof record of five years of consistent remittances to show banks or PAG-IBIG, and no rewards for being one of the 10 million OFWs collectively sending PHP 1.6 trillion home every year — nearly 9% of Philippine GDP. Every sacrifice is invisible.
 
