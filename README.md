@@ -130,8 +130,7 @@ Deployed on Stellar testnet:
 CDTZLW3TJCJDFJYJST7W74HSI5T57O5WW7XYMTRRWJIGRQSG4U5PMXLP
 ```
 
-> Explorer: [https://stellar.expert/explorer/testnet/contract/CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMCTCWSGJQPHGA
-](https://stellar.expert/explorer/testnet/contract/CDTZLW3TJCJDFJYJST7W74HSI5T57O5WW7XYMTRRWJIGRQSG4U5PMXLP)
+> Explorer: [https://stellar.expert/explorer/testnet/contract/CDTZLW3TJCJDFJYJST7W74HSI5T57O5WW7XYMTRRWJIGRQSG4U5PMXLP](https://stellar.expert/explorer/testnet/contract/CDTZLW3TJCJDFJYJST7W74HSI5T57O5WW7XYMTRRWJIGRQSG4U5PMXLP)
 
 <img width="1244" height="724" alt="Screenshot 2026-04-19 at 8 02 21 AM" src="https://github.com/user-attachments/assets/644b193a-40c7-4453-83ae-3292f9dbfda5" />
 
@@ -217,7 +216,7 @@ ANTHROPIC_API_KEY=<your Anthropic API key>
 ```bash
 # Create escrow: OFW locks USDC for family, tagged as tuition
 soroban contract invoke \
-  --id CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMCTCWSGJQPHGA \
+  --id CDTZLW3TJCJDFJYJST7W74HSI5T57O5WW7XYMTRRWJIGRQSG4U5PMXLP \
   --source ofw \
   --network testnet \
   -- create_escrow \
@@ -230,7 +229,7 @@ soroban contract invoke \
 
 # Family confirms payment (releases USDC + mints NFT box)
 soroban contract invoke \
-  --id CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMCTCWSGJQPHGA \
+  --id CDTZLW3TJCJDFJYJST7W74HSI5T57O5WW7XYMTRRWJIGRQSG4U5PMXLP \
   --source family \
   --network testnet \
   -- confirm_payment \
@@ -238,14 +237,14 @@ soroban contract invoke \
 
 # Check escrow state
 soroban contract invoke \
-  --id CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMCTCWSGJQPHGA \
+  --id CDTZLW3TJCJDFJYJST7W74HSI5T57O5WW7XYMTRRWJIGRQSG4U5PMXLP \
   --network testnet \
   -- get_escrow \
   --escrow_id 1
 
 # Check OFW tier
 soroban contract invoke \
-  --id CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMCTCWSGJQPHGA \
+  --id CDTZLW3TJCJDFJYJST7W74HSI5T57O5WW7XYMTRRWJIGRQSG4U5PMXLP \
   --network testnet \
   -- get_tier \
   --ofw <OFW_ADDRESS>
