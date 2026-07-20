@@ -68,8 +68,7 @@ The app is fully responsive down to a 390px viewport (iPhone 13), built with Tai
 ## 5. Analytics & Monitoring
 BalikBayan ships with [Vercel Analytics](https://vercel.com/docs/analytics) and [Speed Insights](https://vercel.com/docs/speed-insights) wired directly into the app (`App.tsx`), tracking real user page views, web vitals, and performance in production.
 
-<!-- TODO: replace with a real screenshot of your Vercel Analytics dashboard once the app has production traffic -->
-<img width="1200" alt="Vercel Analytics dashboard" src="docs/screenshots/analytics-dashboard.png" />
+<img width="1200" alt="Vercel Analytics dashboard showing live production traffic" src="docs/screenshots/analytics-dashboard.webp" />
 
 ## Architecture
 ```
