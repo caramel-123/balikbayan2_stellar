@@ -57,6 +57,18 @@ BalikBayan lets the OFW lock USDC in a Soroban smart contract escrow tagged to a
 <img width="1443" height="733" alt="Screenshot 2026-04-19 at 8 39 16 AM" src="https://github.com/user-attachments/assets/a3d0bec4-2e1a-4bba-846e-97691813e77a" />
 
 
+## 4. Mobile Responsive Design
+The app is fully responsive down to a 390px viewport (iPhone 13), built with Tailwind's responsive breakpoints and served as an installable PWA.
+
+<img alt="BalikBayan mobile landing page" src="docs/screenshots/mobile-landing.png" width="360" />
+<img alt="BalikBayan mobile how-it-works section" src="docs/screenshots/mobile-landing-2.png" width="360" />
+
+## 5. Analytics & Monitoring
+BalikBayan ships with [Vercel Analytics](https://vercel.com/docs/analytics) and [Speed Insights](https://vercel.com/docs/speed-insights) wired directly into the app (`App.tsx`), tracking real user page views, web vitals, and performance in production.
+
+<!-- TODO: replace with a real screenshot of your Vercel Analytics dashboard once the app has production traffic -->
+<img width="1200" alt="Vercel Analytics dashboard" src="docs/screenshots/analytics-dashboard.png" />
+
 ## Architecture
 ```
 Browser (React + Vite + TypeScript)
