@@ -318,7 +318,10 @@ Filipino OFWs (10 million strong) sending PHP 1.6 trillion home annually — wor
 
 ### Feedback Collection
 
-We collected feedback from 54 testers via a [Google Form](https://docs.google.com/forms) covering how they found BalikBayan, which features they used, an overall experience rating, what they liked, and what to improve.
+We collected feedback from 54 testers via a [Google Form](https://forms.gle/hHq3cR8P2Ma2VDVFA) covering how they found BalikBayan, which features they used, an overall experience rating, what they liked, and what to improve.
+
+Feedback Form: [forms.gle/hHq3cR8P2Ma2VDVFA](https://forms.gle/hHq3cR8P2Ma2VDVFA)
+Raw Responses: [Google Sheet](https://docs.google.com/spreadsheets/d/196_Zh_AjB0ohW9ajXkJ-ge-FyuBcLvCdKH84WbgIeLw/edit?usp=sharing)
 
 **Summary:**
 - **Average rating: 4.82 / 5** across 54 responses (42 gave 5/5, 9 gave 4/5, 3 incomplete)
