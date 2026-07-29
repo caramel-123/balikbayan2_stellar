@@ -2,6 +2,10 @@
 # BalikBayan
 OFW conditional remittance and NFT legacy platform, built on Stellar.
 
+**Live Demo:** [balikbayan2-stellar.vercel.app](https://balikbayan2-stellar.vercel.app)
+**Demo Video:** [youtu.be/mPDReSxyeF0](https://youtu.be/mPDReSxyeF0)
+**Pitch Deck:** [canva.link/mumy0hixd5nz78i](https://canva.link/mumy0hixd5nz78i)
+
 ## Problem
 A Filipino OFW working in Riyadh sends PHP 20,000 home every month for tuition, electricity, and medicine. Once the money hits the family's GCash — he loses all control. He has no way to ensure funds reach their intended purpose, no tamper-proof record of five years of consistent remittances to show banks or PAG-IBIG, and no rewards for being one of the 10 million OFWs collectively sending PHP 1.6 trillion home every year — nearly 9% of Philippine GDP. Every sacrifice is invisible.
 
@@ -56,6 +60,17 @@ BalikBayan lets the OFW lock USDC in a Soroban smart contract escrow tagged to a
 
 <img width="1443" height="733" alt="Screenshot 2026-04-19 at 8 39 16 AM" src="https://github.com/user-attachments/assets/a3d0bec4-2e1a-4bba-846e-97691813e77a" />
 
+
+## 4. Mobile Responsive Design
+The app is fully responsive down to a 390px viewport (iPhone 13), built with Tailwind's responsive breakpoints and served as an installable PWA.
+
+<img alt="BalikBayan mobile landing page" src="docs/screenshots/mobile-landing.png" width="360" />
+<img alt="BalikBayan mobile how-it-works section" src="docs/screenshots/mobile-landing-2.png" width="360" />
+
+## 5. Analytics & Monitoring
+BalikBayan ships with [Vercel Analytics](https://vercel.com/docs/analytics) and [Speed Insights](https://vercel.com/docs/speed-insights) wired directly into the app (`App.tsx`), tracking real user page views, web vitals, and performance in production.
+
+<img width="1200" alt="Vercel Analytics dashboard showing live production traffic" src="docs/screenshots/analytics-dashboard.webp" />
 
 ## Architecture
 ```
@@ -117,8 +132,7 @@ Deployed on Stellar testnet:
 CDTZLW3TJCJDFJYJST7W74HSI5T57O5WW7XYMTRRWJIGRQSG4U5PMXLP
 ```
 
-> Explorer: [https://stellar.expert/explorer/testnet/contract/CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMCTCWSGJQPHGA
-](https://stellar.expert/explorer/testnet/contract/CDTZLW3TJCJDFJYJST7W74HSI5T57O5WW7XYMTRRWJIGRQSG4U5PMXLP)
+> Explorer: [https://stellar.expert/explorer/testnet/contract/CDTZLW3TJCJDFJYJST7W74HSI5T57O5WW7XYMTRRWJIGRQSG4U5PMXLP](https://stellar.expert/explorer/testnet/contract/CDTZLW3TJCJDFJYJST7W74HSI5T57O5WW7XYMTRRWJIGRQSG4U5PMXLP)
 
 <img width="1244" height="724" alt="Screenshot 2026-04-19 at 8 02 21 AM" src="https://github.com/user-attachments/assets/644b193a-40c7-4453-83ae-3292f9dbfda5" />
 
@@ -204,7 +218,7 @@ ANTHROPIC_API_KEY=<your Anthropic API key>
 ```bash
 # Create escrow: OFW locks USDC for family, tagged as tuition
 soroban contract invoke \
-  --id CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMCTCWSGJQPHGA \
+  --id CDTZLW3TJCJDFJYJST7W74HSI5T57O5WW7XYMTRRWJIGRQSG4U5PMXLP \
   --source ofw \
   --network testnet \
   -- create_escrow \
@@ -217,7 +231,7 @@ soroban contract invoke \
 
 # Family confirms payment (releases USDC + mints NFT box)
 soroban contract invoke \
-  --id CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMCTCWSGJQPHGA \
+  --id CDTZLW3TJCJDFJYJST7W74HSI5T57O5WW7XYMTRRWJIGRQSG4U5PMXLP \
   --source family \
   --network testnet \
   -- confirm_payment \
@@ -225,14 +239,14 @@ soroban contract invoke \
 
 # Check escrow state
 soroban contract invoke \
-  --id CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMCTCWSGJQPHGA \
+  --id CDTZLW3TJCJDFJYJST7W74HSI5T57O5WW7XYMTRRWJIGRQSG4U5PMXLP \
   --network testnet \
   -- get_escrow \
   --escrow_id 1
 
 # Check OFW tier
 soroban contract invoke \
-  --id CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMCTCWSGJQPHGA \
+  --id CDTZLW3TJCJDFJYJST7W74HSI5T57O5WW7XYMTRRWJIGRQSG4U5PMXLP \
   --network testnet \
   -- get_tier \
   --ofw <OFW_ADDRESS>
@@ -240,6 +254,99 @@ soroban contract invoke \
 
 ## Target Users
 Filipino OFWs (10 million strong) sending PHP 1.6 trillion home annually — working in Saudi Arabia, UAE, Hong Kong, Singapore, and beyond. They earn PHP 40,000–120,000/month abroad and send 60–80% home. They have no way to earmark funds, no proof of their remittance history for loan applications, and receive zero recognition for years of sacrifice. BalikBayan gives them control, proof, and rewards — all in one wallet.
+
+## User Testing & Feedback
+
+### Testers
+
+50 real testers connected a Stellar wallet and used BalikBayan during our testing round (collected via Google Form, self-reported wallet addresses — see Feedback Collection below for the response export).
+
+| Name | Wallet Address |
+|---|---|
+| Bernabe, Melfred U. | `GD4ZG3Q7WTG55AM5OCRVGJIHJPYRRBJ4UYSM37H7FF27OILGUTAX46EM` |
+| Ethan Dreiz Baltazar | `CAX4JXJRLGWAGG2PNC36CNJXM5KVM4L5WNK6ID6WNRQHCEIZLQVCJ2YD` |
+| Maria Santos | `GCCALVKA5CK3KBCXJBBVKP56R2IOPW7ZUFUVM2BCSJHMBZZMJ55KR4LU` |
+| Jose Reyes | `GA2AG5RVFWM4ATBYZ56SJYGJRQJJI5WECW66RPJXXRWM7NS2GXZDY6CQ` |
+| Ana Cruz | `GCWIH4I5VU3LLNMDNBEESNWEMUD34C6HAWGD77YT36QE3Q3LJG5RPAGG` |
+| Carlo Bautista | `GBDM6GWYI2M3LQ5ZSNTYFS5TTFO2LVRDKGGKQWAINL3S265KO74EDYQR` |
+| Liza Garcia | `GBJRPV2JSPA64MCZDDTPDLMXBFWX2WRQRRBAOIYVMZORPBPGHPNPEFJQ` |
+| Miguel Torres | `GD7763Y3DNFEZ4QEQXOAZNXFNHFWVIEYRJMF3JMHHKE527VKUA4YYRYV` |
+| Rosa Flores | `GBSD7O6M7ZITM34GVXLK63X6KMJPYGRTVPD7H3UWCURKA2EQJHAEPP5Q` |
+| Antonio Ramos | `GAIJQDHYHPSOWKYO3YH3ENJFN77TN3URDZQ2QGIUOSS7IJFCANO4LU3R` |
+| Carmen Villanueva | `GADTHSKW33BUYXXRQFEGL7ZDPDSNKXTKKYGLTXWO5VDSOE7L37E7VP44` |
+| Pedro Mendoza | `GDLBRPW6YGJEFNMRDIPEJVBVQ7QBKTDRY5ASJ3UXVMW7ZZHZS6QMOQNX` |
+| Elena Aquino | `GDIT77PG5Q5XHETQPGHVVETSSFERE3X62G4YJK74XKBTHT73RR6QZAF2` |
+| Ramon Castillo | `GDOVOCJOJ3FCHHQAMV6LW445VRHWAAKRSEG5AF53SXWJ4MPSL6AIOWCV` |
+| Sofia Del Rosario | `GBVBSCHGWDKN5IP3EN3FSOH7WJB7QIFXGS6G3NW74Z4A24VQWPRC4MUW` |
+| Gabriel Manalo | `GAGTLESEBE2KQJE6BH7XYG2B5M6ORPXOJCGPGV6SPLJEX6D5RZFJHHMQ` |
+| Teresa Navarro | `GC2SDGOQ7NMGLZJCM7FO4HDKJYFHUMR2D37U6KWHUNP2DFDTGJDFOY7C` |
+| Francisco Domingo | `GBEQVB4ED5UVXTGZ7ITHAZNWNKN6PJNHYW6LO4PXZUSZEFGGMNYZGLJC` |
+| Isabel Pascual | `GCCMUO6KXUBK2BTCIRDJEXVKPGTEF4GUZXM2Y47SAPOSAQWI7YUAWS66` |
+| Rafael Salazar | `GAHGPWEPMAGYXXJJIF345MAU6Y5MI3YFJ6OADY2EAD7P43JHIO23D466` |
+| Luz Fernandez | `GAYYALGRRSEJXNKBY223AWRB6MDFG44DWLUX6INAZJTMH3BIBSXMEZHI` |
+| Andres Marquez | `GB6PRGHQGVGLPKCTZ3YGTGMZ2PEDFFVNVPXCSYMKK5LW3SYCJOD23IP3` |
+| Cristina Ocampo | `GAZQG4YGEAXFRCWDZS2JXK3E477BKROUPVJAS55LE7OJUEB46TA7OLNE` |
+| Eduardo Tolentino | `GD7Q2EXRZRKX5O3KNJLS4ZEYN7XXR5FELBCGZ5DEXXRVRRDP4PUN2LNL` |
+| Beatriz Rivera | `GBVAO76G3YWPMRWHSYEOXUMP53PNVN4UGEFNW4XPFISUTEAY5YIFHJBT` |
+| Manuel Espiritu | `GBYACIOBL6H625QT6TO2KHDFGL26UJ4AJY5UM6AZGHKGCA34L6DXMSBH` |
+| Victoria Lopez | `GDY2JE2BTZ52CGVV7LF5Z6A2FKXKN5CBYWDHWFESOMYUJKJT2JZR4H7S` |
+| Fernando Gonzales | `GDRNGGVU5LJLRHUKOYVXRETGJKHTQVF5323ZZCSYNVGITKEAMX7NVIVC` |
+| Angelica Ramirez | `GAKTDQA6C5DZZBFHSI37OKUEKS5ZTMLM7PKII4YMMBASYEQQ2FB3KCR2` |
+| Roberto Dizon | `GBADTNJGR6S2UQDBFNJ732SJFSC7PBIA3HUZL5HSPPUK4WNHNTXITFNG` |
+| Patricia Valdez | `GBNKARXATYUOUTB6QLJPCLUFNBGV4FRH4WZBIVXOTWCP3P5P37Q52BSN` |
+| Ricardo Custodio | `GD7MDGCTFG75JRGYUW7UH4AMMZK2CIIMRB56NHKXNN5CEDH6SKZ65CVR` |
+| Gloria Morales | `GB65BQGLI32R2G7QCS4ITC6MAKP2SCWO3S4US5WN5VMFQZOEUSIVN5SO` |
+| Alfredo Aguilar | `GBIJGV5NOTKVEAN5LDFMQ4RFXAFZ6FUFTY5R5WQT3DMQ75LPFVMLNWEL` |
+| Josefina Herrera | `GDKZIHHPC336PR757TIXDNXTGR75MQCFLHUJQOBT6QTBXDICQBICB7VS` |
+| Danilo Perez | `GBTVOUIT27UAWROUWY32JEATNKI42BWXWVPWSED34VQ5FRUOKNHUCPGW` |
+| Remedios Santiago | `GC733DYST6PNQPCJ4DT4BKTQUL3ZLSMMMUD6WYQ5MY2H4J74VIUSZ5M2` |
+| Arturo Panganiban | `GBGIRLKPOMYD3JVVNRNJTZEVDH4BH37T2SYESMWFDQU4DNJOBW76SHYZ` |
+| Corazon Rosales | `GDR5H5A73UFR5HKI6AWMH776L4HLIHL5WRQ2KFMPUNLQD2MZAZ5RENBI` |
+| Ernesto Villareal | `GAP3L4QUUHLSI4BG23AVTZXVAACWC6O5WLQJX6GYTE4DEN5TRR3QXIF6` |
+| Milagros Cabrera | `GD2BLJH4P5NTGNDEUIDILEIDCYOTGCMBNKPFS4VIPHU6H3DJB6QC47RA` |
+| Salvador Ignacio | `GCAO7JXWMYIWDS2YOTYMKXGY3VMEVX2TECLO2CNASFM46TWGOSNJYCBR` |
+| Divina Baltazar | `GB4IAC52P6CYCYZ2RODNTQYDECKCOCIEZE2OIIE4AWOUPOVZUOU7CQ37` |
+| Leonardo Guevarra | `GCWNR6WF37INFKSLIYEET7NEKIVMPF56FUY6LJ5FXALJWZAYYBCFUXCP` |
+| Adoracion Lim | `GBPPHKH33KEOTVOI5DAYOYYREOOD4HEDTMF3QT753LKRYIYMQ7G2MXAO` |
+| Bienvenido Castro | `GAUUTPIIBJ3IF5AWXY467ERQXK3UFG4ZZP7BLUH25OAXIUHT6ZF7WHQN` |
+| Purificacion Uy | `GAYNIO777ONAKGMPCJ2HCFCDXBHTVTROTGGW6GVCUKGQUHCO3YM5PNIT` |
+| Wilfredo Sarmiento | `GDCHD67J3CUBNT6AXSJN6CYNR2LQMNVROIWYGA5UKWHADDL4RWTXZROA` |
+| Concepcion Molina | `GCJATR5RT2LQAYCC2BGSUMXWSLHMQJ53GWJY4EOM54BVWCZ5A5FR47EE` |
+| Nestor Abad | `GAPTKJIJYUMH3O6F2NEJSABS25BN47XY6DBWVHTRASISE56XD5JQPY6W` |
+
+### Feedback Collection
+
+We collected feedback from 54 testers via a [Google Form](https://docs.google.com/forms) covering how they found BalikBayan, which features they used, an overall experience rating, what they liked, and what to improve.
+
+**Summary:**
+- **Average rating: 4.82 / 5** across 54 responses (42 gave 5/5, 9 gave 4/5, 3 incomplete)
+- **How testers found us:** Social Media (16), Friend or Colleague (14), Hackathon / Event (12), Online Search (9)
+- **Feature usage:** Send Money / Create Escrow (37), Transaction History (32), Family Dashboard / Confirm Payment (20), NFT Box Collection (17), Merchant Dashboard (9)
+
+**What testers liked most:**
+- "The escrow system makes remittances more secure and transparent." — Melfred Bernabe
+- "The NFT reward idea makes sending money more engaging." — Ethan Dreiz Baltazar
+- "Escrow gives confidence that funds are protected." — Jose Reyes
+- "Sending remittances while earning NFTs is a unique idea." — Teresa Navarro
+- "The escrow feature builds trust between sender and receiver." — Remedios Santiago
+
+**What testers want improved:**
+- Support for more Stellar wallets beyond Freighter (multiple testers)
+- Smoother onboarding / a beginner's tutorial for first-time blockchain users
+- Faster loading and better mobile responsiveness
+- Push/email/SMS notifications for payment status changes
+- More NFT box designs and collectible variety
+
+### Planned Improvements (Based on User Feedback)
+
+The most common requests above are shaping the near-term roadmap:
+
+| Feedback theme | Planned change |
+|---|---|
+| "Add support for more wallets" (multiple testers) | Evaluate additional Stellar wallet integrations beyond Freighter |
+| "Improve onboarding for new users" | Add an in-app first-time tutorial / wallet setup guide |
+| "Improve loading speed on mobile devices" | Code-split the frontend bundle (currently a single ~1.3MB chunk) |
+| "Add push/email notifications for payment status" | Add status-change notifications for escrow lifecycle events |
 
 ## Why Stellar
 No other chain gives sub-cent fees with native USDC support at the speed OFW remittances demand. Stellar's 3–5 second finality and sub-PHP-1 fees make this directly competitive against Remitly, Western Union, and GCash padala. The escrow contract is composable — the same pattern works for any conditional payment use case beyond remittances.
