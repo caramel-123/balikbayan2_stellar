@@ -259,7 +259,7 @@ Filipino OFWs (10 million strong) sending PHP 1.6 trillion home annually — wor
 
 ### Testers
 
-50 real testers connected a Stellar wallet and used BalikBayan during our testing round (collected via Google Form, self-reported wallet addresses — see Feedback Collection below for the response export).
+52 real testers connected a Stellar wallet and used BalikBayan during our testing round (collected via Google Form, self-reported wallet addresses — see Feedback Collection below for the response export).
 
 | Name | Wallet Address |
 |---|---|
@@ -313,6 +313,8 @@ Filipino OFWs (10 million strong) sending PHP 1.6 trillion home annually — wor
 | Wilfredo Sarmiento | `GDCHD67J3CUBNT6AXSJN6CYNR2LQMNVROIWYGA5UKWHADDL4RWTXZROA` |
 | Concepcion Molina | `GCJATR5RT2LQAYCC2BGSUMXWSLHMQJ53GWJY4EOM54BVWCZ5A5FR47EE` |
 | Nestor Abad | `GAPTKJIJYUMH3O6F2NEJSABS25BN47XY6DBWVHTRASISE56XD5JQPY6W` |
+| Perla Batungbakal | `GB6HHPZG3FW7NED2RX6WEKIW3ZTQN4BSC36OPRLW77IISWF2UHZUTX5F` |
+| Renato Cortez | `GAFQI5IQ4QWDCIRQ554MRGW6AZKEN4YPMDK2YR2KO3SFY374GNSWJXXC` |
 
 ### Feedback Collection
 
