@@ -1,7 +1,23 @@
 import { Package, Send, Receipt, CheckCircle2, ArrowRight, Users, Heart, Store, Sparkles, Shield, Wallet } from 'lucide-react';
+import { motion } from 'motion/react';
 import { Button } from '../components/Button';
 import { useApp } from '../context/AppContext';
 import { useState } from 'react';
+
+const heroContainer = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.12, delayChildren: 0.1 } },
+};
+
+const heroItem = {
+  hidden: { opacity: 0, y: 24 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: 'easeOut' } },
+};
+
+const fadeInUp = {
+  hidden: { opacity: 0, y: 30 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: 'easeOut' } },
+};
 
 const TIER_SHOWCASE = [
   { tier: 'Common', boxes: '0–4 boxes', bg: 'from-slate-400 to-slate-500', glow: '' },
@@ -56,38 +72,51 @@ export function LandingPage() {
           </div>
 
           <div className="max-w-7xl mx-auto px-4 sm:px-6 py-20 grid lg:grid-cols-2 gap-16 items-center relative">
-            <div>
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#C4E2F5] text-[#2C5EAD] text-xs font-bold mb-6 uppercase tracking-wider">
+            <motion.div variants={heroContainer} initial="hidden" animate="show">
+              <motion.div variants={heroItem} className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#C4E2F5] text-[#2C5EAD] text-xs font-bold mb-6 uppercase tracking-wider">
                 <Sparkles className="w-3.5 h-3.5" /> Blockchain-Secured Remittance
-              </div>
-              <h1 className="text-5xl sm:text-6xl font-extrabold text-[#1E293B] leading-[1.1] tracking-tight mb-6">
+              </motion.div>
+              <motion.h1 variants={heroItem} className="text-5xl sm:text-6xl font-extrabold text-[#1E293B] leading-[1.1] tracking-tight mb-6">
                 Send Money<br />
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#2C5EAD] to-[#4BB8FA]">
                   With Purpose.
                 </span>
-              </h1>
-              <p className="text-xl text-[#64748B] leading-relaxed mb-10 max-w-lg">
+              </motion.h1>
+              <motion.p variants={heroItem} className="text-xl text-[#64748B] leading-relaxed mb-10 max-w-lg">
                 Every peso is protected until it fulfills its promise. Blockchain escrow ensures your hard-earned money reaches exactly where it was meant to go.
-              </p>
-              <div className="flex flex-wrap gap-4">
-                <button
+              </motion.p>
+              <motion.div variants={heroItem} className="flex flex-wrap gap-4">
+                <motion.button
                   onClick={handleConnect}
-                  className="flex items-center gap-2 px-6 py-3.5 rounded-2xl bg-[#2C5EAD] text-white font-bold text-base hover:bg-[#1591DC] transition-all shadow-lg shadow-blue-200 hover:shadow-blue-300 hover:-translate-y-0.5"
+                  whileHover={{ y: -2, boxShadow: '0 12px 24px rgba(21,145,220,0.3)' }}
+                  whileTap={{ scale: 0.96 }}
+                  className="flex items-center gap-2 px-6 py-3.5 rounded-2xl bg-[#2C5EAD] text-white font-bold text-base hover:bg-[#1591DC] transition-colors shadow-lg shadow-blue-200"
                 >
                   <Wallet className="w-5 h-5" /> Connect Wallet
-                </button>
-                <button
+                </motion.button>
+                <motion.button
                   onClick={() => document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' })}
-                  className="flex items-center gap-2 px-6 py-3.5 rounded-2xl border-2 border-[#C4E2F5] text-[#2C5EAD] font-bold text-base hover:bg-[#EFF6FF] transition-all"
+                  whileHover={{ y: -2 }}
+                  whileTap={{ scale: 0.96 }}
+                  className="flex items-center gap-2 px-6 py-3.5 rounded-2xl border-2 border-[#C4E2F5] text-[#2C5EAD] font-bold text-base hover:bg-[#EFF6FF] transition-colors"
                 >
                   See How It Works
-                </button>
-              </div>
-              <p className="mt-6 text-sm text-[#64748B] italic">"Every peso sent. Every sacrifice remembered."</p>
-            </div>
+                </motion.button>
+              </motion.div>
+              <motion.p variants={heroItem} className="mt-6 text-sm text-[#64748B] italic">"Every peso sent. Every sacrifice remembered."</motion.p>
+            </motion.div>
 
-            <div className="relative hidden lg:block">
-              <div className="bg-white rounded-3xl shadow-2xl shadow-blue-100 border border-[#E2E8F0] p-6 space-y-4">
+            <motion.div
+              initial={{ opacity: 0, x: 40 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.7, delay: 0.4, ease: 'easeOut' }}
+              className="relative hidden lg:block"
+            >
+              <motion.div
+                animate={{ y: [0, -10, 0] }}
+                transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+                className="bg-white rounded-3xl shadow-2xl shadow-blue-100 border border-[#E2E8F0] p-6 space-y-4"
+              >
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-xs text-[#64748B] font-medium">Escrow Protected</p>
@@ -109,8 +138,12 @@ export function LandingPage() {
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-semibold text-[#1E293B] truncate">{p.label}</p>
                       <div className="mt-1 h-1.5 rounded-full bg-[#EFF6FF] overflow-hidden">
-                        <div className="h-full rounded-full bg-gradient-to-r from-[#2C5EAD] to-[#4BB8FA]" style={{ width: `${p.progress}%` }} />
-                      </div>
+                        <motion.div
+                          initial={{ width: 0 }}
+                          animate={{ width: `${p.progress}%` }}
+                          transition={{ duration: 1, delay: 0.9, ease: 'easeOut' }}
+                          className="h-full rounded-full bg-gradient-to-r from-[#2C5EAD] to-[#4BB8FA]"
+                        />
                     </div>
                   </div>
                 ))}
@@ -126,8 +159,8 @@ export function LandingPage() {
                     <Sparkles className="w-4 h-4 text-amber-500 ml-auto" />
                   </div>
                 </div>
-              </div>
-            </div>
+              </motion.div>
+            </motion.div>
           </div>
         </section>
 
