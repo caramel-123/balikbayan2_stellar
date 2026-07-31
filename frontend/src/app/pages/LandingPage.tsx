@@ -7,17 +7,17 @@ import { useState } from 'react';
 const heroContainer = {
   hidden: {},
   show: { transition: { staggerChildren: 0.12, delayChildren: 0.1 } },
-};
+} as const;
 
 const heroItem = {
   hidden: { opacity: 0, y: 24 },
   show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: 'easeOut' } },
-};
+} as const;
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 30 },
   show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: 'easeOut' } },
-};
+} as const;
 
 const TIER_SHOWCASE = [
   { tier: 'Common', boxes: '0–4 boxes', bg: 'from-slate-400 to-slate-500', glow: '' },
@@ -144,6 +144,7 @@ export function LandingPage() {
                           transition={{ duration: 1, delay: 0.9, ease: 'easeOut' }}
                           className="h-full rounded-full bg-gradient-to-r from-[#2C5EAD] to-[#4BB8FA]"
                         />
+                      </div>
                     </div>
                   </div>
                 ))}
