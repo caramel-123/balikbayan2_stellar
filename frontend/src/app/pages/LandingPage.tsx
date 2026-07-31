@@ -78,9 +78,19 @@ export function LandingPage() {
               </motion.div>
               <motion.h1 variants={heroItem} className="text-5xl sm:text-6xl font-extrabold text-[#1E293B] leading-[1.1] tracking-tight mb-6">
                 Send Money<br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#2C5EAD] to-[#4BB8FA]">
+                <motion.span
+                  className="text-transparent bg-clip-text"
+                  style={{
+                    backgroundImage:
+                      'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.95) 45%, transparent 60%), linear-gradient(90deg, #2C5EAD, #4BB8FA)',
+                    backgroundSize: '250% 100%, 100% 100%',
+                    backgroundRepeat: 'no-repeat',
+                  }}
+                  animate={{ backgroundPosition: ['-150% 0, 0 0', '150% 0, 0 0'] }}
+                  transition={{ duration: 2.2, repeat: Infinity, repeatDelay: 2.5, ease: 'easeInOut' }}
+                >
                   With Purpose.
-                </span>
+                </motion.span>
               </motion.h1>
               <motion.p variants={heroItem} className="text-xl text-[#64748B] leading-relaxed mb-10 max-w-lg">
                 Every peso is protected until it fulfills its promise. Blockchain escrow ensures your hard-earned money reaches exactly where it was meant to go.
