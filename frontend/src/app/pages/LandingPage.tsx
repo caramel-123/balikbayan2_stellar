@@ -182,7 +182,7 @@ export function LandingPage() {
             <motion.div
               initial="hidden"
               whileInView="show"
-              viewport={{ once: true, amount: 0.4 }}
+              viewport={{ once: false, amount: 0.4 }}
               variants={fadeInUp}
               className="text-center mb-16"
             >
@@ -193,7 +193,7 @@ export function LandingPage() {
               <motion.div
                 initial={{ scaleX: 0 }}
                 whileInView={{ scaleX: 1 }}
-                viewport={{ once: true, amount: 0.4 }}
+                viewport={{ once: false, amount: 0.4 }}
                 transition={{ duration: 0.8, ease: 'easeOut' }}
                 style={{ transformOrigin: 'left' }}
                 className="hidden md:block absolute top-[52px] left-[calc(16.67%+32px)] right-[calc(16.67%+32px)] h-px bg-gradient-to-r from-[#C4E2F5] via-[#4BB8FA] to-[#C4E2F5]"
@@ -207,7 +207,7 @@ export function LandingPage() {
                   key={step.num}
                   initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, amount: 0.3 }}
+                  viewport={{ once: false, amount: 0.3 }}
                   transition={{ duration: 0.5, delay: idx * 0.15, ease: 'easeOut' }}
                   whileHover={{ y: -6 }}
                   className="relative flex flex-col items-center text-center p-8 rounded-3xl bg-[#F8FAFC] border border-[#E2E8F0] hover:shadow-xl hover:shadow-blue-50 transition-shadow"
@@ -233,7 +233,7 @@ export function LandingPage() {
             <motion.div
               initial="hidden"
               whileInView="show"
-              viewport={{ once: true, amount: 0.4 }}
+              viewport={{ once: false, amount: 0.4 }}
               variants={fadeInUp}
               className="text-center mb-16"
             >
@@ -250,7 +250,7 @@ export function LandingPage() {
                   key={card.label}
                   initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, amount: 0.3 }}
+                  viewport={{ once: false, amount: 0.3 }}
                   transition={{ duration: 0.5, delay: idx * 0.15, ease: 'easeOut' }}
                   whileHover={{ y: -6 }}
                   className="bg-white rounded-3xl border border-[#E2E8F0] p-8 hover:shadow-2xl hover:shadow-blue-100 transition-shadow"
@@ -289,7 +289,7 @@ export function LandingPage() {
             <motion.div
               initial="hidden"
               whileInView="show"
-              viewport={{ once: true, amount: 0.4 }}
+              viewport={{ once: false, amount: 0.4 }}
               variants={fadeInUp}
               className="text-center mb-16"
             >
@@ -303,7 +303,7 @@ export function LandingPage() {
                   key={t.tier}
                   initial={{ opacity: 0, y: 30, scale: 0.9 }}
                   whileInView={{ opacity: 1, y: 0, scale: 1 }}
-                  viewport={{ once: true, amount: 0.3 }}
+                  viewport={{ once: false, amount: 0.3 }}
                   transition={{ duration: 0.5, delay: idx * 0.1, ease: 'easeOut' }}
                   whileHover={{ y: -10, scale: 1.04 }}
                   className={`group relative w-44 rounded-3xl overflow-hidden border border-white/20 shadow-xl ${t.glow} cursor-pointer`}
@@ -330,7 +330,7 @@ export function LandingPage() {
             <motion.div
               initial="hidden"
               whileInView="show"
-              viewport={{ once: true, amount: 0.4 }}
+              viewport={{ once: false, amount: 0.4 }}
               variants={fadeInUp}
               className="text-center mb-16"
             >
@@ -347,7 +347,7 @@ export function LandingPage() {
                   key={s.label}
                   initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, amount: 0.3 }}
+                  viewport={{ once: false, amount: 0.3 }}
                   transition={{ duration: 0.5, delay: idx * 0.15, ease: 'easeOut' }}
                   whileHover={{ y: -4 }}
                   className="text-center p-6 rounded-3xl bg-white/10 backdrop-blur border border-white/20"
