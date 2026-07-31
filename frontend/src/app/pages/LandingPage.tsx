@@ -147,7 +147,12 @@ export function LandingPage() {
                     </div>
                   </div>
                 ))}
-                <div className="pt-2">
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.4, delay: 1.6, ease: 'easeOut' }}
+                  className="pt-2"
+                >
                   <div className="flex items-center gap-3 p-3 rounded-2xl bg-gradient-to-r from-yellow-50 to-amber-50 border border-yellow-100">
                     <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-yellow-400 to-amber-500 shadow-sm flex items-center justify-center">
                       <Package className="w-4 h-4 text-white" />
@@ -156,9 +161,15 @@ export function LandingPage() {
                       <p className="text-xs font-bold text-amber-800">Gold NFT Box Earned!</p>
                       <p className="text-xs text-amber-600">Tuition promise fulfilled</p>
                     </div>
-                    <Sparkles className="w-4 h-4 text-amber-500 ml-auto" />
+                    <motion.span
+                      animate={{ rotate: [0, 15, -15, 0], scale: [1, 1.2, 1] }}
+                      transition={{ duration: 1.8, repeat: Infinity, repeatDelay: 1, ease: 'easeInOut' }}
+                      className="ml-auto"
+                    >
+                      <Sparkles className="w-4 h-4 text-amber-500" />
+                    </motion.span>
                   </div>
-                </div>
+                </motion.div>
               </motion.div>
             </motion.div>
           </div>
@@ -167,18 +178,39 @@ export function LandingPage() {
         {/* How it works */}
         <section id="how-it-works" className="py-24 bg-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6">
-            <div className="text-center mb-16">
+            <motion.div
+              initial="hidden"
+              whileInView="show"
+              viewport={{ once: true, amount: 0.4 }}
+              variants={fadeInUp}
+              className="text-center mb-16"
+            >
               <p className="text-xs font-bold text-[#1591DC] uppercase tracking-widest mb-3">How It Works</p>
               <h2 className="text-4xl font-extrabold text-[#1E293B] tracking-tight">Three steps. One promise kept.</h2>
-            </div>
+            </motion.div>
             <div className="grid md:grid-cols-3 gap-6 relative">
-              <div className="hidden md:block absolute top-[52px] left-[calc(16.67%+32px)] right-[calc(16.67%+32px)] h-px bg-gradient-to-r from-[#C4E2F5] via-[#4BB8FA] to-[#C4E2F5]" />
+              <motion.div
+                initial={{ scaleX: 0 }}
+                whileInView={{ scaleX: 1 }}
+                viewport={{ once: true, amount: 0.4 }}
+                transition={{ duration: 0.8, ease: 'easeOut' }}
+                style={{ transformOrigin: 'left' }}
+                className="hidden md:block absolute top-[52px] left-[calc(16.67%+32px)] right-[calc(16.67%+32px)] h-px bg-gradient-to-r from-[#C4E2F5] via-[#4BB8FA] to-[#C4E2F5]"
+              />
               {[
                 { num: '01', icon: Send, title: 'Lock funds for a purpose', body: "Specify the exact bill or expense. Funds enter blockchain escrow on Stellar and are locked until conditions are met.", color: '#2C5EAD' },
                 { num: '02', icon: Receipt, title: 'Family pays the bill', body: 'Your family submits a receipt. Our AI verifies authenticity and confirms payment in seconds.', color: '#1591DC' },
                 { num: '03', icon: Package, title: 'Earn a BalikBayan Box', body: 'Funds release instantly. A collectible NFT is minted — building trust and unlocking rewards.', color: '#4BB8FA' },
-              ].map((step) => (
-                <div key={step.num} className="relative flex flex-col items-center text-center p-8 rounded-3xl bg-[#F8FAFC] border border-[#E2E8F0] hover:shadow-xl hover:shadow-blue-50 transition-all hover:-translate-y-1">
+              ].map((step, idx) => (
+                <motion.div
+                  key={step.num}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, amount: 0.3 }}
+                  transition={{ duration: 0.5, delay: idx * 0.15, ease: 'easeOut' }}
+                  whileHover={{ y: -6 }}
+                  className="relative flex flex-col items-center text-center p-8 rounded-3xl bg-[#F8FAFC] border border-[#E2E8F0] hover:shadow-xl hover:shadow-blue-50 transition-shadow"
+                >
                   <div
                     className="w-16 h-16 rounded-2xl flex items-center justify-center mb-6 shadow-lg"
                     style={{ background: `linear-gradient(135deg, ${step.color}22, ${step.color}44)`, border: `1.5px solid ${step.color}33` }}
@@ -188,7 +220,7 @@ export function LandingPage() {
                   <span className="text-xs font-bold text-[#64748B] mb-2">{step.num}</span>
                   <h3 className="text-xl font-bold text-[#1E293B] mb-3">{step.title}</h3>
                   <p className="text-[#64748B] text-sm leading-relaxed">{step.body}</p>
-                </div>
+                </motion.div>
               ))}
             </div>
           </div>
@@ -197,20 +229,37 @@ export function LandingPage() {
         {/* User Roles */}
         <section className="py-24 bg-gradient-to-b from-[#EFF6FF] to-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6">
-            <div className="text-center mb-16">
+            <motion.div
+              initial="hidden"
+              whileInView="show"
+              viewport={{ once: true, amount: 0.4 }}
+              variants={fadeInUp}
+              className="text-center mb-16"
+            >
               <p className="text-xs font-bold text-[#1591DC] uppercase tracking-widest mb-3">For Everyone</p>
               <h2 className="text-4xl font-extrabold text-[#1E293B] tracking-tight">One platform. Every role.</h2>
-            </div>
+            </motion.div>
             <div className="grid md:grid-cols-3 gap-6">
               {[
                 { icon: Users, label: 'OFW Sender', desc: 'Send remittances with full accountability.', features: ['Send with confidence', 'Track all promises', 'Earn collectibles'], cta: "I'm sending money", gradient: 'from-[#2C5EAD] to-[#1591DC]' },
                 { icon: Heart, label: 'Family Receiver', desc: 'Receive funds transparently and earn rewards.', features: ['Confirm payments easily', 'Redeem merchant perks', 'Build loyalty tier'], cta: "I'm receiving money", gradient: 'from-[#1591DC] to-[#4BB8FA]' },
                 { icon: Store, label: 'Merchant Partner', desc: 'Serve loyal families. Grow your business.', features: ['Scan & verify QR codes', 'Apply tiered discounts', 'Join loyalty ecosystem'], cta: 'Partner with us', gradient: 'from-[#4BB8FA] to-[#C4E2F5]' },
-              ].map((card) => (
-                <div key={card.label} className="bg-white rounded-3xl border border-[#E2E8F0] p-8 hover:shadow-2xl hover:shadow-blue-100 transition-all hover:-translate-y-1">
-                  <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${card.gradient} flex items-center justify-center shadow-lg mb-6`}>
+              ].map((card, idx) => (
+                <motion.div
+                  key={card.label}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, amount: 0.3 }}
+                  transition={{ duration: 0.5, delay: idx * 0.15, ease: 'easeOut' }}
+                  whileHover={{ y: -6 }}
+                  className="bg-white rounded-3xl border border-[#E2E8F0] p-8 hover:shadow-2xl hover:shadow-blue-100 transition-shadow"
+                >
+                  <motion.div
+                    whileHover={{ rotate: 8, scale: 1.08 }}
+                    className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${card.gradient} flex items-center justify-center shadow-lg mb-6`}
+                  >
                     <card.icon className="w-6 h-6 text-white" />
-                  </div>
+                  </motion.div>
                   <h3 className="text-xl font-bold text-[#1E293B] mb-2">{card.label}</h3>
                   <p className="text-[#64748B] text-sm mb-6">{card.desc}</p>
                   <ul className="space-y-2 mb-8">
@@ -227,7 +276,7 @@ export function LandingPage() {
                   >
                     {card.cta} <ArrowRight className="w-4 h-4" />
                   </button>
-                </div>
+                </motion.div>
               ))}
             </div>
           </div>
@@ -236,14 +285,28 @@ export function LandingPage() {
         {/* NFT Tier Showcase */}
         <section className="py-24 bg-white overflow-hidden">
           <div className="max-w-7xl mx-auto px-4 sm:px-6">
-            <div className="text-center mb-16">
+            <motion.div
+              initial="hidden"
+              whileInView="show"
+              viewport={{ once: true, amount: 0.4 }}
+              variants={fadeInUp}
+              className="text-center mb-16"
+            >
               <p className="text-xs font-bold text-[#1591DC] uppercase tracking-widest mb-3">Collectibles</p>
               <h2 className="text-4xl font-extrabold text-[#1E293B] tracking-tight">BalikBayan Box Tiers</h2>
               <p className="text-[#64748B] mt-3 max-w-xl mx-auto">Every fulfilled promise mints a collectible NFT. The more you send, the rarer your collection.</p>
-            </div>
+            </motion.div>
             <div className="flex flex-wrap justify-center gap-5">
-              {TIER_SHOWCASE.map((t) => (
-                <div key={t.tier} className={`group relative w-44 rounded-3xl overflow-hidden border border-white/20 shadow-xl ${t.glow} hover:-translate-y-2 transition-all cursor-pointer`}>
+              {TIER_SHOWCASE.map((t, idx) => (
+                <motion.div
+                  key={t.tier}
+                  initial={{ opacity: 0, y: 30, scale: 0.9 }}
+                  whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                  viewport={{ once: true, amount: 0.3 }}
+                  transition={{ duration: 0.5, delay: idx * 0.1, ease: 'easeOut' }}
+                  whileHover={{ y: -10, scale: 1.04 }}
+                  className={`group relative w-44 rounded-3xl overflow-hidden border border-white/20 shadow-xl ${t.glow} cursor-pointer`}
+                >
                   <div className={`h-36 bg-gradient-to-br ${t.bg} flex items-center justify-center relative`}>
                     <Package className="w-12 h-12 text-white/90 group-hover:scale-110 transition-transform" />
                     {t.tier === 'Legend' && (
@@ -254,7 +317,7 @@ export function LandingPage() {
                     <p className="font-extrabold text-[#1E293B] text-sm">{t.tier}</p>
                     <p className="text-xs text-[#64748B] mt-0.5">{t.boxes}</p>
                   </div>
-                </div>
+                </motion.div>
               ))}
             </div>
           </div>
@@ -263,21 +326,35 @@ export function LandingPage() {
         {/* Stats */}
         <section className="py-24 bg-gradient-to-br from-[#2C5EAD] to-[#1591DC]">
           <div className="max-w-7xl mx-auto px-4 sm:px-6">
-            <div className="text-center mb-16">
+            <motion.div
+              initial="hidden"
+              whileInView="show"
+              viewport={{ once: true, amount: 0.4 }}
+              variants={fadeInUp}
+              className="text-center mb-16"
+            >
               <h2 className="text-4xl font-extrabold text-white tracking-tight">Trusted by OFWs worldwide</h2>
               <p className="text-blue-200 mt-3">Real numbers. Real families. Real impact.</p>
-            </div>
+            </motion.div>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
               {[
                 { label: 'OFWs Served', value: '12,547', sub: 'And growing' },
                 { label: 'Total Remittances Locked', value: '₱2.8B', sub: 'Secured on-chain' },
                 { label: 'Partner Merchants', value: '348', sub: 'Across the Philippines' },
-              ].map((s) => (
-                <div key={s.label} className="text-center p-6 rounded-3xl bg-white/10 backdrop-blur border border-white/20">
+              ].map((s, idx) => (
+                <motion.div
+                  key={s.label}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, amount: 0.3 }}
+                  transition={{ duration: 0.5, delay: idx * 0.15, ease: 'easeOut' }}
+                  whileHover={{ y: -4 }}
+                  className="text-center p-6 rounded-3xl bg-white/10 backdrop-blur border border-white/20"
+                >
                   <p className="text-3xl font-extrabold text-white">{s.value}</p>
                   <p className="text-blue-100 text-sm font-semibold mt-1">{s.label}</p>
                   <p className="text-blue-200/70 text-xs mt-0.5">{s.sub}</p>
-                </div>
+                </motion.div>
               ))}
             </div>
           </div>
